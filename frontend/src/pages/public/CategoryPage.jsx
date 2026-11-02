@@ -1,0 +1,33 @@
+import { Link, useParams } from 'react-router-dom';
+import ErrorState from '../../components/admin/ErrorState.jsx';
+import ProductListing from '../../components/store/ProductListing.jsx';
+import StorePage from '../../components/store/StorePage.jsx';
+import { useFetch } from '../../hooks/useFetch.js';
+
+export default function CategoryPage() {
+  const { slug } = useParams();
+  const { data: category, error, reload } = useFetch(`/categories/${slug}`);
+
+  if (error) {
+    return (
+      <StorePage>
+        <ErrorState message={error} onRetry={reload} />
+      </StorePage>
+    );
+  }
+
+  return (
+    <StorePage title={category?.name ?? ' '} subtitle={category?.description}>
+      {category?.children?.length > 0 && (
+        <nav aria-label="Subcategories" className="mb-5 flex gap-2 overflow-x-auto pb-1">
+          {category.children.map(({ slug: childSlug, name }) => (
+            <Link key={childSlug} to={`/category/${childSlug}`} className="shrink-0 rounded-full border border-line bg-white px-4 py-1.5 text-sm font-medium text-navy hover:border-primary hover:text-primary">
+              {name}
+            </Link>
+          ))}
+        </nav>
+      )}
+      <ProductListing key={slug} fixedCategory={slug} />
+    </StorePage>
+  );
+}

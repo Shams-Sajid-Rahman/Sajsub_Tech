@@ -175,6 +175,28 @@ Money values are strings such as `"999.00"`, which avoids rounding errors. `effe
 
 These are mounted and return `501` for every request.
 
-`/users`, `/inventory`, `/cart`, `/wishlist`, `/orders`, `/payments`, `/ai`
+`/users`, `/inventory`, `/payments`, `/ai`
 
 Create, update and delete endpoints for products, categories and brands are also planned, because they need admin authentication.
+
+## Storefront endpoints
+
+Cart, wishlist and order endpoints require a customer login. Prices and stock always come from the database.
+
+| Method | Path | Description |
+| --- | --- | --- |
+| GET | `/site` | Active banners and public settings |
+| POST | `/contact` | Body: `name`, `email`, `subject`, `message` |
+| GET | `/products/:slug/related` | Up to 6 related products |
+| GET, PUT | `/products/:slug/reviews` | List, or save your review. Saving needs a delivered order containing the product |
+| GET, DELETE | `/cart` | View or empty the cart |
+| POST | `/cart/items` | Body: `productId`, `quantity` |
+| PATCH, DELETE | `/cart/items/:productId` | Change quantity or remove |
+| GET | `/wishlist` | View the wishlist |
+| POST | `/wishlist/items` | Body: `productId` |
+| DELETE | `/wishlist/items/:productId` | Remove |
+| GET, POST | `/orders` | Order history, or place a cash-on-delivery order from the cart. Body: `shippingAddress`, optional `customerNote` |
+| GET | `/orders/:id` | One of your orders |
+| POST | `/orders/:id/cancel` | Cancels a pending order and restores stock |
+
+`GET /products` also accepts `inStock` (`true` or `false`) and `sort=oldest`.

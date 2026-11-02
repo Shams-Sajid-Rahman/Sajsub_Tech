@@ -30,6 +30,6 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173. The status page should show both checks as Connected.
+Open http://localhost:5173 for the store and http://localhost:5173/admin/login for the admin dashboard.
 
 See [docs/SETUP.md](docs/SETUP.md) for installation commands, environment variables and tests, and [docs/API.md](docs/API.md) for the API.
