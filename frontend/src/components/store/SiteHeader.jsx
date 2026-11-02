@@ -74,8 +74,9 @@ function AccountMenu() {
 
   const handleLogout = async () => {
     close();
-    await logout();
+    // Leave first, or a protected page would redirect to the login page.
     navigate('/');
+    await logout();
   };
   const item = 'block w-full px-4 py-2 text-left text-[13px] text-navy hover:bg-page hover:text-primary';
 

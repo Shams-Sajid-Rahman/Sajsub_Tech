@@ -194,8 +194,11 @@ Cart, wishlist and order endpoints require a customer login. Prices and stock al
 | PATCH, DELETE | `/cart/items/:productId` | Change quantity or remove |
 | GET | `/wishlist` | View the wishlist |
 | POST | `/wishlist/items` | Body: `productId` |
+| POST | `/wishlist/items/:productId/move-to-cart` | Moves one to the cart. It stays on the wishlist if that fails |
+| GET, POST | `/addresses` | List, or save an address |
+| DELETE | `/addresses/:id` | Deletes a saved address. Past orders keep their copy |
 | DELETE | `/wishlist/items/:productId` | Remove |
-| GET, POST | `/orders` | Order history, or place a cash-on-delivery order from the cart. Body: `shippingAddress`, optional `customerNote` |
+| GET, POST | `/orders` | Order history, or place an order from the cart. Body: `addressId` or `shippingAddress`, `paymentMethod` (`CASH_ON_DELIVERY`), `idempotencyKey` (a UUID kept across retries), optional `expectedTotal` (409 if the total has changed), optional `customerNote`. A repeated key returns the original order with 200 |
 | GET | `/orders/:id` | One of your orders |
 | POST | `/orders/:id/cancel` | Cancels a pending order and restores stock |
 

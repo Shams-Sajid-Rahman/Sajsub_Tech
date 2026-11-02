@@ -73,6 +73,20 @@ export function StoreProvider({ children }) {
     [requireCustomer, wishlist, toast],
   );
 
+  const moveToCart = useCallback(
+    async (productId) => {
+      try {
+        const { data } = await apiPost(`/wishlist/items/${productId}/move-to-cart`);
+        setCart(data.cart);
+        setWishlist(data.wishlist);
+        toast.success('Moved to cart');
+      } catch (error) {
+        toast.error(error.message);
+      }
+    },
+    [toast],
+  );
+
   const updateCartItem = useCallback(async (productId, quantity) => {
     const { data } = await apiPatch(`/cart/items/${productId}`, { quantity });
     setCart(data);
@@ -97,11 +111,12 @@ export function StoreProvider({ children }) {
       isInWishlist: (productId) => wishlist.some(({ id }) => id === productId),
       addToCart,
       toggleWishlist,
+      moveToCart,
       updateCartItem,
       removeCartItem,
       refreshCart,
     }),
-    [site, siteLoaded, cart, wishlist, addToCart, toggleWishlist, updateCartItem, removeCartItem, refreshCart],
+    [site, siteLoaded, cart, wishlist, addToCart, toggleWishlist, moveToCart, updateCartItem, removeCartItem, refreshCart],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

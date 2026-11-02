@@ -72,7 +72,7 @@ export default function OrderDetailsPage() {
         <aside className="space-y-5">
           <section className={`${CARD} p-5`}>
             <h2 className="mb-3 font-bold text-navy">Summary</h2>
-            <OrderSummary rows={[['Subtotal', order.subtotalAmount], ['Shipping', order.shippingAmount], ['Total', order.totalAmount]]} />
+            <OrderSummary subtotal={order.subtotalAmount} discount={order.discountAmount} shipping={order.shippingAmount} total={order.totalAmount} />
             {payment && <p className="mt-3 text-xs text-muted">Payment: {formatEnum(payment.method)}</p>}
           </section>
           <section className={`${CARD} p-5 text-sm text-muted`}>

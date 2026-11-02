@@ -8,6 +8,12 @@ import { useStore } from '../../hooks/useStore.js';
 import { useToast } from '../../hooks/useToast.js';
 import { formatMoney } from '../../utils/format.js';
 
+const issueMessage = (issue, stockAvailable) => {
+  if (issue === 'NOT_ENOUGH_STOCK') return `Only ${stockAvailable} left. Lower the quantity to continue.`;
+  if (issue === 'OUT_OF_STOCK') return 'Out of stock. Remove this item to continue.';
+  return 'No longer available. Remove this item to continue.';
+};
+
 export default function CartPage() {
   const { cart, updateCartItem, removeCartItem } = useStore();
   const toast = useToast();
@@ -47,7 +53,7 @@ export default function CartPage() {
     <StorePage title="My cart">
       <div className="grid items-start gap-5 lg:grid-cols-[1fr_340px]">
         <ul className={`${CARD} divide-y divide-line`}>
-          {cart.items.map(({ productId, quantity, lineTotal, available, product }) => (
+          {cart.items.map(({ productId, quantity, lineTotal, available, issue, stockAvailable, product }) => (
             <li key={productId} className="flex flex-wrap items-center gap-3 p-4">
               <Link to={`/product/${product.slug}`} className="flex size-20 shrink-0 items-center justify-center rounded-lg bg-page p-1">
                 {product.primaryImage ? <img src={product.primaryImage.url} alt="" className="max-h-full max-w-full object-contain" /> : <ImageOff aria-hidden="true" className="size-6 text-slate-300" />}
@@ -55,7 +61,7 @@ export default function CartPage() {
               <div className="min-w-40 flex-1">
                 <Link to={`/product/${product.slug}`} className="text-sm font-semibold text-navy hover:text-primary">{product.name}</Link>
                 <p className="text-xs text-muted">{formatMoney(product.effectivePrice)} each</p>
-                {!available && <p className="mt-1 text-xs font-semibold text-red-700">Not available in this quantity. Lower it or remove this item.</p>}
+                {!available && <p className="mt-1 text-xs font-semibold text-red-700">{issueMessage(issue, stockAvailable)}</p>}
               </div>
               <div className="flex items-center rounded-lg border border-line">
                 <button type="button" aria-label={`Decrease ${product.name} quantity`} disabled={busy || quantity <= 1} onClick={() => run(() => updateCartItem(productId, quantity - 1))} className="p-2 text-navy disabled:opacity-40">
@@ -75,7 +81,8 @@ export default function CartPage() {
         </ul>
         <aside className={`${CARD} p-5`}>
           <h2 className="mb-3 font-bold text-navy">Order summary</h2>
-          <OrderSummary rows={[['Subtotal', cart.subtotal], ['Shipping', cart.shipping], ['Total', cart.total]]} />
+          <OrderSummary {...cart} />
+          {blocked && <p className="mt-3 text-xs font-semibold text-red-700">Fix the items marked above to continue.</p>}
           <Link
             to={blocked ? '#' : '/checkout'}
             aria-disabled={blocked}
