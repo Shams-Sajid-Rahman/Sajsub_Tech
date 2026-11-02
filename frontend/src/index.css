@@ -1,1 +1,12 @@
 @import 'tailwindcss';
+
+/* Design tokens taken from docs/design/homepage-reference.png */
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --color-primary: #0b5cf5;
+  --color-primary-dark: #0a4bc9;
+  --color-navy: #0a1a3f;
+  --color-muted: #5b6780;
+  --color-line: #e3e9f4;
+  --color-page: #f4f8ff;
+}

@@ -32,4 +32,4 @@ npm run dev
 
 Open http://localhost:5173. The status page should show both checks as Connected.
 
-See [docs/SETUP.md](docs/SETUP.md) for installation commands, environment variables and tests.
+See [docs/SETUP.md](docs/SETUP.md) for installation commands, environment variables and tests, and [docs/API.md](docs/API.md) for the API.
