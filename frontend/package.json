@@ -1,0 +1,22 @@
+{
+  "name": "sajsub-tech-frontend",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "description": "Sajsub Tech storefront and admin dashboard",
+  "dependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@vitejs/plugin-react": "^4.7.0",
+    "tailwindcss": "^4.3.3",
+    "vite": "^6.4.5"
+  },
+  "type": "module",
+  "private": true
+}
