@@ -19,7 +19,9 @@ psql -U postgres -h localhost -p 5432 -f database/create_database.sql
 # 2. Backend: copy .env.example to .env and set your password in DATABASE_URL first
 cd backend
 npm install
+npm run db:deploy
 npm run db:generate
+npm run db:seed
 npm run dev
 
 # 3. Frontend, in a second terminal: copy .env.example to .env first
