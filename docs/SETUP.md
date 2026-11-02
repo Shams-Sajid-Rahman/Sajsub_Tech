@@ -6,7 +6,7 @@ Each app has its own `.env`, ignored by Git. `.env.example` is the committed tem
 
 | File | Variables |
 | --- | --- |
-| `backend/.env` | `NODE_ENV`, `PORT`, `CLIENT_URL`, `DATABASE_URL`, `TRUST_PROXY`, `JWT_SECRET`, `CSRF_SECRET`, `COOKIE_SAMESITE`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `EMAIL_FROM`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `ADMIN_FIRST_NAME`, `ADMIN_LAST_NAME` |
+| `backend/.env` | `NODE_ENV`, `PORT`, `CLIENT_URL`, `DATABASE_URL`, `TRUST_PROXY`, `JWT_SECRET`, `CSRF_SECRET`, `COOKIE_SAMESITE`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `EMAIL_FROM`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `SSLCOMMERZ_STORE_ID`, `SSLCOMMERZ_STORE_PASSWORD`, `SSLCOMMERZ_SANDBOX`, `API_PUBLIC_URL`, `GEMINI_API_KEY`, `AI_MODEL`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `ADMIN_FIRST_NAME`, `ADMIN_LAST_NAME` |
 | `frontend/.env` | `VITE_API_URL` |
 
 Anything prefixed `VITE_` is bundled into the browser, so secrets belong only in `backend/.env`.
@@ -21,7 +21,7 @@ npm i react@19 react-dom@19 react-router-dom@7 recharts@3 lucide-react
 npm i -D vite@6 @vitejs/plugin-react@4 tailwindcss@4 @tailwindcss/vite@4
 
 # Backend
-npm i express@5 cors@2 helmet@8 cookie-parser@1 morgan@1 dotenv@16 @prisma/client@6 bcryptjs@3 zod@4 express-rate-limit@8 jsonwebtoken@9 nodemailer@10 multer@2 cloudinary@2
+npm i express@5 cors@2 helmet@8 cookie-parser@1 morgan@1 dotenv@16 @prisma/client@6 bcryptjs@3 zod@4 express-rate-limit@8 jsonwebtoken@9 nodemailer@10 multer@2 cloudinary@2 @google/genai
 npm i -D prisma@6 supertest@7
 ```
 

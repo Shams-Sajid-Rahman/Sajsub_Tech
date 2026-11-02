@@ -1,10 +1,11 @@
 import { Headset, Repeat2, ShieldCheck, Truck } from 'lucide-react';
 import { useStore } from '../../hooks/useStore.js';
+import { formatMoney } from '../../utils/format.js';
 
 export default function ServiceStrip() {
   const { settings } = useStore().site;
   const services = [
-    { icon: Truck, title: 'Free Shipping', text: settings.free_shipping_threshold ? `On orders over $${settings.free_shipping_threshold}` : 'On eligible orders' },
+    { icon: Truck, title: 'Free Shipping', text: settings.free_shipping_threshold ? `On orders over ${formatMoney(settings.free_shipping_threshold)}` : 'On eligible orders' },
     { icon: ShieldCheck, title: 'Secure Payment', text: '100% secure checkout' },
     { icon: Headset, title: '24/7 Support', text: 'Get help anytime' },
     { icon: Repeat2, title: 'Easy Returns', text: settings.return_policy_days ? `${settings.return_policy_days} days return policy` : 'Simple return policy' },

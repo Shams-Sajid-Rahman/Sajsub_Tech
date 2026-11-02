@@ -11,7 +11,7 @@ const TONES = {
 const STATUS_TONES = {
   ACTIVE: 'good', PUBLISHED: 'good', PAID: 'good', DELIVERED: 'good', Yes: 'good', Success: 'good',
   PENDING: 'warn', DRAFT: 'warn', PARTIALLY_REFUNDED: 'warn', Low: 'warn',
-  SUSPENDED: 'bad', FAILED: 'bad', CANCELLED: 'bad', Out: 'bad', Failed: 'bad',
+  SUSPENDED: 'bad', FAILED: 'bad', CANCELLED: 'bad', Out: 'bad', Failed: 'bad', 'Refund needed': 'bad', 'High risk': 'bad',
   CONFIRMED: 'info', PROCESSING: 'info', SHIPPED: 'info', ADMIN: 'info',
 };
 

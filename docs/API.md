@@ -113,9 +113,11 @@ All require an admin session: anonymous requests get 401 and customers get 403. 
 | POST | `/admin/inventory/adjust` | Body: `productId`, `quantityChange`, `type` (`RESTOCK` or `ADJUSTMENT`), `note` |
 | GET | `/admin/orders` | Filters: `search`, `status`, `paymentStatus`. Rows include `allowedStatuses` |
 | GET | `/admin/orders/:id` | Order with items and payments |
-| PATCH | `/admin/orders/:id/status` | Only allowed changes, otherwise 409. Cancelling or returning restores stock |
-| GET | `/admin/payments` | Filters: `search`, `status`, `method`. Rows include `allowedStatuses` |
-| PATCH | `/admin/payments/:id/status` | Records a status and updates the order. Doesn't contact a payment provider |
+| PATCH | `/admin/orders/:id/status` | Body: `status`, optional `note`, `trackingNumber`, `carrier`. Only allowed changes, otherwise 409. Cancelling restores stock |
+| GET | `/admin/payments` | Filters: `search`, `status`, `method`, `needsRefund`. Rows include `allowedStatuses` and `refundable` |
+| PATCH | `/admin/payments/:id/status` | Cash on delivery only. Online payments return 409 |
+| POST | `/admin/payments/:id/refunds` | Body: `reason`, optional `amount`, `reference`, `restock`. Records a refund |
+| POST | `/admin/payments/:id/verify` | Asks the provider for the latest result of an online payment |
 | GET, POST | `/admin/banners` | Filters: `search`, `placement`, `isActive` |
 | PATCH, DELETE | `/admin/banners/:id` | Update or permanently delete |
 | GET | `/admin/settings` | Filter: `search` |
@@ -123,7 +125,7 @@ All require an admin session: anonymous requests get 401 and customers get 403. 
 | GET | `/admin/logs/activity` | Filters: `search` (action), `entityType` |
 | GET | `/admin/logs/logins` | Filters: `search` (email), `success` |
 
-Total revenue counts orders with `paymentStatus = PAID` that aren't cancelled or returned. Partially refunded orders are excluded, because refund amounts aren't stored yet.
+Total revenue is money collected, minus refunds, leaving out money waiting to be refunded.
 
 ## Public endpoints
 
@@ -155,7 +157,7 @@ Query parameters for `GET /products`:
 | `minPrice`, `maxPrice` | Filter on the price the customer pays |
 | `sort` | `newest` (default), `price_asc`, `price_desc`, `name`, `rating` |
 
-Money values are strings such as `"999.00"`, which avoids rounding errors. `effectivePrice` is the price the customer pays. Exact stock counts stay private, and customers see `inStock` instead.
+Money values are BDT strings such as `"119900.00"`, which avoids rounding errors. `effectivePrice` is the price the customer pays. Exact stock counts stay private, and customers see `inStock` instead.
 
 ### Categories
 
@@ -175,7 +177,7 @@ Money values are strings such as `"999.00"`, which avoids rounding errors. `effe
 
 These are mounted and return `501` for every request.
 
-`/users`, `/inventory`, `/payments`, `/ai`
+`/users`, `/inventory`
 
 Create, update and delete endpoints for products, categories and brands are also planned, because they need admin authentication.
 
@@ -199,7 +201,27 @@ Cart, wishlist and order endpoints require a customer login. Prices and stock al
 | DELETE | `/addresses/:id` | Deletes a saved address. Past orders keep their copy |
 | DELETE | `/wishlist/items/:productId` | Remove |
 | GET, POST | `/orders` | Order history, or place an order from the cart. Body: `addressId` or `shippingAddress`, `paymentMethod` (`CASH_ON_DELIVERY`), `idempotencyKey` (a UUID kept across retries), optional `expectedTotal` (409 if the total has changed), optional `customerNote`. A repeated key returns the original order with 200 |
-| GET | `/orders/:id` | One of your orders |
-| POST | `/orders/:id/cancel` | Cancels a pending order and restores stock |
+| GET | `/orders/:id` | One of your orders, with tracking history, payments and refunds |
+| POST | `/orders/:id/cancel` | Cancels a pending or confirmed order and restores stock |
+| POST | `/orders/:id/payments` | Starts an online payment and returns `gatewayUrl` |
+| POST | `/orders/:id/payments/verify` | Asks the provider for the latest result, and returns the order |
 
-`GET /products` also accepts `inStock` (`true` or `false`) and `sort=oldest`.
+### AI assistant
+
+Works for guests and logged-in customers. See [AI_ASSISTANT.md](AI_ASSISTANT.md).
+
+| Method | Path | Description |
+| --- | --- | --- |
+| POST | `/ai/messages` | Body: `message` (up to 1,000 characters), optional `conversationId`. Returns `conversationId`, `reply` and `products`. Limited to 30 per 15 minutes |
+| GET, DELETE | `/ai/conversations/:id` | Read or delete your own chat. Product cards show current prices |
+
+### Payment provider callbacks
+
+Called by SSLCommerz or the customer's browser, as form posts with no session or CSRF token. See [PAYMENTS.md](PAYMENTS.md) for how they are verified.
+
+| Method | Path | Description |
+| --- | --- | --- |
+| POST | `/payments/sslcommerz/success`, `/fail`, `/cancel` | Verifies, then redirects the browser to the order page |
+| POST | `/payments/sslcommerz/ipn` | Server notification. Needs a valid signature |
+
+`GET /products` also accepts `inStock` and `onSale` (`true` or `false`), and `sort=oldest`.

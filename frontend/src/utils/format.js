@@ -1,8 +1,9 @@
-const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 const dateTime = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' });
 const date = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
 
-export const formatMoney = (value) => currency.format(Number(value ?? 0));
+// Taka with the sign first: ৳119,900, or ৳8,400.50 when there are paisa.
+export const formatMoney = (value) =>
+  `৳${Number(value ?? 0).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
 export const formatDateTime = (value) => (value ? dateTime.format(new Date(value)) : '-');
 export const formatDay = (value) => date.format(new Date(value));
 export const formatEnum = (value) =>

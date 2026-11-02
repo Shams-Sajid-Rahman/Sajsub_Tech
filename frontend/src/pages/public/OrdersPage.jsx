@@ -35,6 +35,7 @@ export default function OrdersPage() {
                   </span>
                   <span className="flex items-center gap-3">
                     <StatusBadge value={order.status} />
+                    <StatusBadge value={order.paymentStatus} />
                     <span className="text-sm font-bold tabular-nums text-navy">{formatMoney(order.totalAmount)}</span>
                   </span>
                 </Link>

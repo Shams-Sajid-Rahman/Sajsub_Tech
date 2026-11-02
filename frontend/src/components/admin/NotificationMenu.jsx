@@ -14,6 +14,9 @@ export default function NotificationMenu() {
         ...(data.pendingOrders > 0
           ? [{ key: 'orders', text: `${pluralize(data.pendingOrders, 'order')} awaiting confirmation`, to: '/admin/orders' }]
           : []),
+        ...(data.refundsDue > 0
+          ? [{ key: 'refunds', text: `${pluralize(data.refundsDue, 'payment')} waiting for a refund`, to: '/admin/payments?needsRefund=true' }]
+          : []),
         ...data.outOfStock.map(({ id, name }) => ({ key: id, text: `${name} is out of stock`, to: '/admin/inventory' })),
         ...data.lowStock.map(({ id, name, stockQuantity }) => ({ key: id, text: `${name}: ${stockQuantity} left`, to: '/admin/inventory' })),
       ]

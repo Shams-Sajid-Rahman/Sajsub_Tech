@@ -10,7 +10,7 @@ import { formatDateTime, formatDay, formatEnum, formatMoney } from '../../utils/
 
 const CHART_COLOR = '#0b5cf5';
 const AXIS_TEXT = { fontSize: 12, fill: '#5b6780' };
-const STATUS_ORDER = ['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED', 'RETURNED'];
+const STATUS_ORDER = ['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED', 'REFUNDED'];
 
 const STAT_CARDS = [
   { key: 'totalRevenue', label: 'Total revenue', icon: DollarSign, format: formatMoney },
@@ -75,7 +75,7 @@ function RevenueChart({ data }) {
         <AreaChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
           <CartesianGrid vertical={false} stroke="#e3e9f4" />
           <XAxis dataKey="date" tickFormatter={formatDay} tick={AXIS_TEXT} tickLine={false} axisLine={false} minTickGap={32} />
-          <YAxis tickFormatter={(value) => `$${value.toLocaleString('en-US')}`} tick={AXIS_TEXT} tickLine={false} axisLine={false} width={64} allowDecimals={false} />
+          <YAxis tickFormatter={(value) => `৳${value.toLocaleString('en-US')}`} tick={AXIS_TEXT} tickLine={false} axisLine={false} width={64} allowDecimals={false} />
           <Tooltip cursor={{ stroke: '#5b6780', strokeDasharray: '3 3' }} content={<ChartTooltip formatLabel={formatDay} formatValue={formatMoney} />} />
           <Area type="linear" dataKey="revenue" stroke={CHART_COLOR} strokeWidth={2} fill={CHART_COLOR} fillOpacity={0.1} activeDot={{ r: 5, stroke: '#fff', strokeWidth: 2 }} isAnimationActive={false} />
         </AreaChart>

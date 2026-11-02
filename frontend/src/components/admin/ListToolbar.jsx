@@ -46,7 +46,7 @@ export default function ListToolbar({ list, searchPlaceholder, filters = [], chi
           <option value="">{label}: All</option>
           {options.map(({ value, label: optionLabel }) => (
             <option key={value} value={value}>
-              {optionLabel}
+              {label}: {optionLabel}
             </option>
           ))}
         </select>

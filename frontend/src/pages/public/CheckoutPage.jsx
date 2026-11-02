@@ -26,10 +26,14 @@ const ADDRESS_FIELDS = [
   { name: 'country', label: 'Country', autoComplete: 'country-name' },
 ];
 
-const PAYMENT_METHODS = [
+const paymentMethods = (onlineEnabled) => [
   { value: 'CASH_ON_DELIVERY', label: 'Cash on delivery', help: 'Pay when your order arrives.' },
-  { value: 'CARD', label: 'Credit or debit card', help: 'Coming soon', disabled: true },
-  { value: 'MOBILE_BANKING', label: 'Mobile banking', help: 'Coming soon', disabled: true },
+  {
+    value: 'ONLINE',
+    label: 'Pay online',
+    help: onlineEnabled ? 'Cards, mobile banking and internet banking through SSLCommerz.' : 'Not available right now.',
+    disabled: !onlineEnabled,
+  },
 ];
 
 const describeAddress = ({ line1, line2, city, state, postalCode, country }) =>
@@ -148,7 +152,7 @@ function AddressSection({ selectedId, onSelect, error }) {
 }
 
 export default function CheckoutPage() {
-  const { cart, refreshCart } = useStore();
+  const { cart, refreshCart, site } = useStore();
   const toast = useToast();
   const navigate = useNavigate();
   const form = useForm({ customerNote: '' });
@@ -169,9 +173,18 @@ export default function CheckoutPage() {
         expectedTotal: cart.total,
         customerNote,
       });
+      if (paymentMethod === 'ONLINE') {
+        try {
+          const { data: payment } = await apiPost(`/orders/${data.id}/payments`);
+          window.location.assign(payment.gatewayUrl);
+          return;
+        } catch {
+          // The order exists and can be paid from its own page.
+          toast.error("Your order is saved, but the payment page couldn't open. Please try again from your order.");
+        }
+      }
       await refreshCart();
-      toast.success('Order placed. Thank you!');
-      navigate(`/orders/${data.id}`, { replace: true });
+      navigate(`/orders/${data.id}`, { replace: true, state: { justPlaced: true } });
     } catch (error) {
       await refreshCart().catch(() => {});
       throw error;
@@ -207,7 +220,7 @@ export default function CheckoutPage() {
           <section className={`${CARD} p-5`}>
             <h2 className="mb-3 font-bold text-navy">Payment method</h2>
             <div className="space-y-2">
-              {PAYMENT_METHODS.map(({ value, label, help, disabled }) => (
+              {paymentMethods(Boolean(site.payments?.online)).map(({ value, label, help, disabled }) => (
                 <label key={value} className={`flex items-start gap-3 rounded-lg border p-3 text-sm ${paymentMethod === value ? 'border-primary bg-page' : 'border-line'} ${disabled ? 'opacity-60' : 'cursor-pointer'}`}>
                   <input type="radio" name="paymentMethod" value={value} disabled={disabled} checked={paymentMethod === value} onChange={() => setPaymentMethod(value)} className="mt-1 accent-primary" />
                   <span>
@@ -245,7 +258,7 @@ export default function CheckoutPage() {
           )}
           {!addressId && !blocked && <p className="mt-3 text-xs text-muted">Add a shipping address to continue.</p>}
           <div className={`mt-4 ${blocked || !addressId ? 'pointer-events-none opacity-50' : ''}`}>
-            <SubmitButton submitting={form.submitting}>Place Order</SubmitButton>
+            <SubmitButton submitting={form.submitting}>{paymentMethod === 'ONLINE' ? 'Place Order and Pay' : 'Place Order'}</SubmitButton>
           </div>
         </form>
       </div>
