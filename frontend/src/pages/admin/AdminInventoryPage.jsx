@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import AdminPage, { RowAction } from '../../components/admin/AdminPage.jsx';
 import DataTable from '../../components/admin/DataTable.jsx';
 import ListToolbar from '../../components/admin/ListToolbar.jsx';
@@ -34,6 +34,8 @@ export default function AdminInventoryPage() {
   const history = useAdminList('/admin/inventory');
   const toast = useToast();
   const [adjusting, setAdjusting] = useState(null);
+  const [historyFor, setHistoryFor] = useState(null);
+  const historyHeading = useRef(null);
 
   const adjust = async (payload) => {
     await apiPost('/admin/inventory/adjust', { ...payload, productId: adjusting.id });
@@ -43,13 +45,32 @@ export default function AdminInventoryPage() {
     history.reload();
   };
 
+  const showHistory = (product) => {
+    setHistoryFor(product);
+    history.setFilter('productId', product.id);
+    historyHeading.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const clearHistoryFilter = () => {
+    setHistoryFor(null);
+    history.setFilter('productId', '');
+  };
+
   const productColumns = [
     { header: 'Product', render: (product) => <span className="font-medium">{product.name}</span> },
     { header: 'SKU', render: (product) => product.sku },
     { header: 'Stock', align: 'right', render: (product) => product.stockQuantity },
     { header: 'Alert at', align: 'right', render: (product) => product.lowStockAlert },
     { header: 'Level', render: (product) => <StatusBadge value={stockStatus(product)} /> },
-    { header: 'Actions', render: (product) => <RowAction onClick={() => setAdjusting(product)}>Adjust</RowAction> },
+    {
+      header: 'Actions',
+      render: (product) => (
+        <span className="whitespace-nowrap">
+          <RowAction onClick={() => setAdjusting(product)}>Adjust</RowAction>
+          <RowAction onClick={() => showHistory(product)}>History</RowAction>
+        </span>
+      ),
+    },
   ];
 
   const historyColumns = [
@@ -67,7 +88,10 @@ export default function AdminInventoryPage() {
       <ListToolbar list={products} searchPlaceholder="Search name or SKU" filters={[{ name: 'stock', label: 'Stock', options: STOCK_OPTIONS }]} />
       <DataTable columns={productColumns} list={products} emptyMessage="No products found." />
 
-      <h2 className="mb-3 mt-8 text-lg font-semibold text-navy">Stock history</h2>
+      <div ref={historyHeading} className="mb-3 mt-8 flex flex-wrap items-center gap-3">
+        <h2 className="text-lg font-semibold text-navy">Stock history{historyFor && `: ${historyFor.name}`}</h2>
+        {historyFor && <RowAction onClick={clearHistoryFilter}>Show all products</RowAction>}
+      </div>
       <ListToolbar list={history} filters={[{ name: 'type', label: 'Type', options: enumOptions(TRANSACTION_TYPES) }]} />
       <DataTable columns={historyColumns} list={history} emptyMessage="No stock changes yet." />
 

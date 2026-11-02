@@ -100,10 +100,15 @@ All require an admin session: anonymous requests get 401 and customers get 403. 
 | PATCH | `/admin/users/:id/status` | `ACTIVE` or `SUSPENDED`. Customers only. Suspending ends their sessions |
 | GET, POST | `/admin/products` | Filters: `search`, `status`, `categoryId`, `brandId`, `stock` (`in`, `low`, `out`) |
 | GET, PATCH | `/admin/products/:id` | Stock can't be set here |
-| DELETE | `/admin/products/:id` | Archives the product |
+| DELETE | `/admin/products/:id` | Deletes the product and its images. With stock or order history, it archives instead. `data.outcome` says which |
+| POST | `/admin/products/:id/images` | Multipart field `images`: up to 10 JPEG, PNG or WebP files, 5 MB each, 20 per product |
+| PUT | `/admin/products/:id/images/:imageId` | Multipart field `image`: replaces the file |
+| PATCH | `/admin/products/:id/images/:imageId/primary` | Makes it the main image |
+| DELETE | `/admin/products/:id/images/:imageId` | Deletes the image. The next becomes main if needed |
 | GET, POST | `/admin/categories`, `/admin/brands` | Filters: `search`, `isActive` |
 | PATCH | `/admin/categories/:id`, `/admin/brands/:id` | Update |
-| DELETE | `/admin/categories/:id`, `/admin/brands/:id` | Archives the record |
+| DELETE | `/admin/categories/:id`, `/admin/brands/:id` | Deletes when unused. With products or subcategories, it archives instead. `data.outcome` says which |
+| PUT, DELETE | `/admin/categories/:id/image` | Multipart field `image`: sets or replaces the image, or removes it |
 | GET | `/admin/inventory` | Stock history. Filters: `productId`, `type` |
 | POST | `/admin/inventory/adjust` | Body: `productId`, `quantityChange`, `type` (`RESTOCK` or `ADJUSTMENT`), `note` |
 | GET | `/admin/orders` | Filters: `search`, `status`, `paymentStatus`. Rows include `allowedStatuses` |

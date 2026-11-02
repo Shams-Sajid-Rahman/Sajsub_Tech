@@ -1,9 +1,12 @@
+import { ImageOff } from 'lucide-react';
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import AdminPage, { AddButton, RowAction } from '../../components/admin/AdminPage.jsx';
 import ConfirmDialog from '../../components/admin/ConfirmDialog.jsx';
 import DataTable from '../../components/admin/DataTable.jsx';
 import ListToolbar from '../../components/admin/ListToolbar.jsx';
 import Modal from '../../components/admin/Modal.jsx';
+import ProductImagesModal from '../../components/admin/ProductImagesModal.jsx';
 import ResourceForm from '../../components/admin/ResourceForm.jsx';
 import StatusBadge from '../../components/admin/StatusBadge.jsx';
 import { useAdminList } from '../../hooks/useAdminList.js';
@@ -39,15 +42,6 @@ const buildFields = (categories, brands, isNew) => [
   { name: 'shortDescription', label: 'Short description', type: 'textarea', nullable: true },
   { name: 'description', label: 'Description', type: 'textarea', nullable: true },
   {
-    name: 'images',
-    label: 'Image URLs',
-    type: 'textarea',
-    help: 'One per line. The first is the main image.',
-    format: (images) => (images ?? []).map(({ url }) => url).join('\n'),
-    parse: (text) => lines(text).map((url) => ({ url })),
-    nullable: true,
-  },
-  {
     name: 'specifications',
     label: 'Specifications',
     type: 'textarea',
@@ -62,6 +56,8 @@ const buildFields = (categories, brands, isNew) => [
   },
 ];
 
+const mainImage = ({ images }) => images.find(({ isPrimary }) => isPrimary) ?? images[0];
+
 const stockBadge = ({ stockQuantity, lowStockAlert }) => {
   if (stockQuantity === 0) return <StatusBadge value="Out" />;
   if (stockQuantity <= lowStockAlert) return <StatusBadge value="Low" />;
@@ -69,12 +65,18 @@ const stockBadge = ({ stockQuantity, lowStockAlert }) => {
 };
 
 export default function AdminProductsPage() {
-  const list = useAdminList('/admin/products');
+  // Category and brand pages link here with a filter already chosen.
+  const [searchParams] = useSearchParams();
+  const list = useAdminList('/admin/products', {
+    categoryId: searchParams.get('categoryId') ?? '',
+    brandId: searchParams.get('brandId') ?? '',
+  });
+  const [imagesFor, setImagesFor] = useState(null);
   const categories = useFetch('/admin/categories?limit=100');
   const brands = useFetch('/admin/brands?limit=100');
   const toast = useToast();
   const [editing, setEditing] = useState(null);
-  const [archiving, setArchiving] = useState(null);
+  const [deleting, setDeleting] = useState(null);
 
   const save = async (payload) => {
     if (editing.id) await apiPatch(`/admin/products/${editing.id}`, payload);
@@ -84,19 +86,38 @@ export default function AdminProductsPage() {
     list.reload();
   };
 
-  const archive = async () => {
-    await apiDelete(`/admin/products/${archiving.id}`);
-    toast.success('Product archived');
+  const remove = async () => {
+    const { message } = await apiDelete(`/admin/products/${deleting.id}`);
+    toast.success(message);
     list.reload();
+  };
+
+  const setPublished = async (product, published) => {
+    try {
+      await apiPatch(`/admin/products/${product.id}`, { status: published ? 'PUBLISHED' : 'DRAFT' });
+      toast.success(published ? 'Product published' : 'Product unpublished');
+      list.reload();
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   const columns = [
     {
       header: 'Product',
       render: (product) => (
-        <span className="block min-w-48">
-          <span className="block font-medium">{product.name}</span>
-          <span className="block text-xs text-muted">{product.sku}</span>
+        <span className="flex min-w-56 items-center gap-3">
+          <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-line bg-slate-50">
+            {mainImage(product) ? (
+              <img src={mainImage(product).url} alt="" className="size-full object-contain" />
+            ) : (
+              <ImageOff aria-hidden="true" className="size-4 text-muted" />
+            )}
+          </span>
+          <span>
+            <span className="block font-medium">{product.name}</span>
+            <span className="block text-xs text-muted">{product.sku}</span>
+          </span>
         </span>
       ),
     },
@@ -126,14 +147,16 @@ export default function AdminProductsPage() {
     {
       header: 'Actions',
       render: (product) => (
-        <>
+        <span className="whitespace-nowrap">
           <RowAction onClick={() => setEditing(product)}>Edit</RowAction>
-          {product.status !== 'ARCHIVED' && (
-            <RowAction danger onClick={() => setArchiving(product)}>
-              Archive
-            </RowAction>
-          )}
-        </>
+          <RowAction onClick={() => setImagesFor(product)}>Images</RowAction>
+          <RowAction onClick={() => setPublished(product, product.status !== 'PUBLISHED')}>
+            {product.status === 'PUBLISHED' ? 'Unpublish' : 'Publish'}
+          </RowAction>
+          <RowAction danger onClick={() => setDeleting(product)}>
+            Delete
+          </RowAction>
+        </span>
       ),
     },
   ];
@@ -165,13 +188,14 @@ export default function AdminProductsPage() {
           />
         </Modal>
       )}
-      {archiving && (
+      {imagesFor && <ProductImagesModal product={imagesFor} onClose={() => setImagesFor(null)} onChanged={list.reload} />}
+      {deleting && (
         <ConfirmDialog
-          title="Archive product?"
-          message={`${archiving.name} will be hidden from the store. Its order history is kept.`}
-          confirmLabel="Archive"
-          onConfirm={archive}
-          onClose={() => setArchiving(null)}
+          title="Delete product?"
+          message={`${deleting.name} will be permanently deleted if it has no stock or order history. Otherwise it will be archived and hidden from the store, so those records stay accurate.`}
+          confirmLabel="Delete"
+          onConfirm={remove}
+          onClose={() => setDeleting(null)}
         />
       )}
     </AdminPage>

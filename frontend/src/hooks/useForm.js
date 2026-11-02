@@ -20,7 +20,10 @@ export const useForm = (initialValues) => {
     try {
       await action(values);
     } catch (requestError) {
-      const fields = Object.fromEntries((requestError.errors ?? []).map(({ field, message }) => [field, message]));
+      // Nested paths such as specifications.0.value show on their top-level field.
+      const fields = Object.fromEntries(
+        (requestError.errors ?? []).map(({ field, message }) => [field.split('.')[0], message]),
+      );
       setFieldErrors(fields);
       setError(Object.keys(fields).length > 0 ? 'Please check the highlighted fields.' : requestError.message);
     } finally {

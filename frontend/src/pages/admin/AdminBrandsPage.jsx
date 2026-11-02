@@ -9,5 +9,14 @@ const fields = (editing) => [
 ];
 
 export default function AdminBrandsPage() {
-  return <CatalogPage title="Brands" description="Manufacturers shown on your products." noun="Brand" path="/admin/brands" fields={fields} />;
+  return (
+    <CatalogPage
+      title="Brands"
+      description="Manufacturers shown on your products. Select a product count to see those products."
+      noun="Brand"
+      path="/admin/brands"
+      productFilter="brandId"
+      fields={fields}
+    />
+  );
 }

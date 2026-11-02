@@ -31,12 +31,14 @@ const getCsrfToken = () => {
 const send = async (method, path, body) => {
   const headers = {};
   if (method !== 'GET') headers['X-CSRF-Token'] = await getCsrfToken();
-  if (body !== undefined) headers['Content-Type'] = 'application/json';
+  // The browser sets the multipart Content-Type itself for file uploads.
+  const isUpload = body instanceof FormData;
+  if (body !== undefined && !isUpload) headers['Content-Type'] = 'application/json';
   return fetch(`${API_URL}${path}`, {
     method,
     headers,
     credentials: 'include',
-    body: body === undefined ? undefined : JSON.stringify(body),
+    body: body === undefined || isUpload ? body : JSON.stringify(body),
   });
 };
 

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAdminList } from '../../hooks/useAdminList.js';
 import { useToast } from '../../hooks/useToast.js';
 import { apiDelete, apiPatch, apiPost } from '../../services/api.js';
@@ -12,11 +13,11 @@ import ResourceForm from './ResourceForm.jsx';
 import StatusBadge from './StatusBadge.jsx';
 
 // The shared page for categories and brands, which are managed the same way.
-export default function CatalogPage({ title, description, noun, path, fields, extraColumns = [] }) {
+export default function CatalogPage({ title, description, noun, path, fields, productFilter, extraColumns = [], renderRowActions, renderExtras }) {
   const list = useAdminList(path);
   const toast = useToast();
   const [editing, setEditing] = useState(null);
-  const [archiving, setArchiving] = useState(null);
+  const [deleting, setDeleting] = useState(null);
 
   const save = async (payload) => {
     if (editing.id) await apiPatch(`${path}/${editing.id}`, payload);
@@ -26,9 +27,9 @@ export default function CatalogPage({ title, description, noun, path, fields, ex
     list.reload();
   };
 
-  const archive = async () => {
-    await apiDelete(`${path}/${archiving.id}`);
-    toast.success(`${noun} archived`);
+  const remove = async () => {
+    const { message } = await apiDelete(`${path}/${deleting.id}`);
+    toast.success(message);
     list.reload();
   };
 
@@ -36,19 +37,26 @@ export default function CatalogPage({ title, description, noun, path, fields, ex
     { header: 'Name', render: (row) => <span className="font-medium">{row.name}</span> },
     { header: 'Slug', render: (row) => <span className="text-muted">{row.slug}</span> },
     ...extraColumns,
-    { header: 'Products', align: 'right', render: (row) => row._count.products },
+    {
+      header: 'Products',
+      align: 'right',
+      render: (row) => (
+        <Link to={`/admin/products?${productFilter}=${row.id}`} className="font-semibold text-primary hover:text-primary-dark">
+          {row._count.products}
+        </Link>
+      ),
+    },
     { header: 'Status', render: (row) => <StatusBadge value={row.isActive ? 'ACTIVE' : 'ARCHIVED'} /> },
     {
       header: 'Actions',
       render: (row) => (
-        <>
+        <span className="whitespace-nowrap">
           <RowAction onClick={() => setEditing(row)}>Edit</RowAction>
-          {row.isActive && (
-            <RowAction danger onClick={() => setArchiving(row)}>
-              Archive
-            </RowAction>
-          )}
-        </>
+          {renderRowActions?.(row)}
+          <RowAction danger onClick={() => setDeleting(row)}>
+            Delete
+          </RowAction>
+        </span>
       ),
     },
   ];
@@ -62,15 +70,16 @@ export default function CatalogPage({ title, description, noun, path, fields, ex
           <ResourceForm fields={fields(editing)} initial={editing} submitLabel={editing.id ? 'Save changes' : `Create ${noun.toLowerCase()}`} onSubmit={save} />
         </Modal>
       )}
-      {archiving && (
+      {deleting && (
         <ConfirmDialog
-          title={`Archive ${noun.toLowerCase()}?`}
-          message={`${archiving.name} will be hidden from the store. You can reactivate it later.`}
-          confirmLabel="Archive"
-          onConfirm={archive}
-          onClose={() => setArchiving(null)}
+          title={`Delete ${noun.toLowerCase()}?`}
+          message={`${deleting.name} will be permanently deleted if nothing uses it. If it has products or subcategories, it will be archived and hidden from the store instead.`}
+          confirmLabel="Delete"
+          onConfirm={remove}
+          onClose={() => setDeleting(null)}
         />
       )}
+      {renderExtras?.(list)}
     </AdminPage>
   );
 }
