@@ -33,4 +33,4 @@ npm run dev
 Open http://localhost:5173 for the store and http://localhost:5173/admin/login for the admin dashboard.
 
 See [docs/SETUP.md](docs/SETUP.md) for installation commands, environment variables and tests, [docs/API.md](docs/API.md) for the API, [docs/PAYMENTS.md](docs/PAYMENTS.md) for orders and payments, and [docs/AI_ASSISTANT.md](docs/AI_ASSISTANT.md) for the shopping assistant.
-The latest testing and security results are in [docs/AUDIT_REPORT.md](docs/AUDIT_REPORT.md).
+The latest testing and security results are in [docs/AUDIT_REPORT.md](docs/AUDIT_REPORT.md). Frontend standards are in [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md), and the redesign audit is in [docs/FRONTEND_AUDIT.md](docs/FRONTEND_AUDIT.md).

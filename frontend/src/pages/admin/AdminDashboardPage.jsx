@@ -2,13 +2,13 @@ import { AlertTriangle, Boxes, DollarSign, FolderTree, Package, PackageX, Shoppi
 import { Link } from 'react-router-dom';
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import AdminPage from '../../components/admin/AdminPage.jsx';
-import ErrorState from '../../components/admin/ErrorState.jsx';
-import Skeleton from '../../components/admin/Skeleton.jsx';
+import ErrorState from '../../components/ui/ErrorState.jsx';
+import LoadingSkeleton from '../../components/ui/LoadingSkeleton.jsx';
 import StatusBadge from '../../components/admin/StatusBadge.jsx';
 import { useFetch } from '../../hooks/useFetch.js';
 import { formatDateTime, formatDay, formatEnum, formatMoney } from '../../utils/format.js';
 
-const CHART_COLOR = '#0b5cf5';
+const CHART_COLOR = '#0866ff';
 const AXIS_TEXT = { fontSize: 12, fill: '#5b6780' };
 const STATUS_ORDER = ['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED', 'REFUNDED'];
 
@@ -95,7 +95,7 @@ function OrdersChart({ data }) {
           <CartesianGrid horizontal={false} stroke="#e3e9f4" />
           <XAxis type="number" allowDecimals={false} tick={AXIS_TEXT} tickLine={false} axisLine={false} />
           <YAxis type="category" dataKey="status" width={84} tick={AXIS_TEXT} tickLine={false} axisLine={false} />
-          <Tooltip cursor={{ fill: '#f4f8ff' }} content={<ChartTooltip formatLabel={(label) => label} formatValue={(value) => `${value} orders`} />} />
+          <Tooltip cursor={{ fill: '#f4f7fc' }} content={<ChartTooltip formatLabel={(label) => label} formatValue={(value) => `${value} orders`} />} />
           <Bar dataKey="count" fill={CHART_COLOR} radius={[0, 4, 4, 0]} maxBarSize={20} isAnimationActive={false} />
         </BarChart>
       </ResponsiveContainer>
@@ -136,12 +136,12 @@ function DashboardSkeleton() {
     <div className="space-y-6" role="status" aria-label="Loading dashboard">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {STAT_CARDS.map(({ key }) => (
-          <Skeleton key={key} className="h-20 rounded-xl" />
+          <LoadingSkeleton key={key} className="h-20 rounded-xl" />
         ))}
       </div>
       <div className="grid gap-4 xl:grid-cols-2">
-        <Skeleton className="h-80 rounded-xl" />
-        <Skeleton className="h-80 rounded-xl" />
+        <LoadingSkeleton className="h-80 rounded-xl" />
+        <LoadingSkeleton className="h-80 rounded-xl" />
       </div>
     </div>
   );

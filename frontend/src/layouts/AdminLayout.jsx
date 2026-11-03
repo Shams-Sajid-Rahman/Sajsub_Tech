@@ -16,8 +16,10 @@ import {
   Users,
   X,
 } from 'lucide-react';
-import { useState } from 'react';
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Suspense, useState } from 'react';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import ErrorBoundary from '../components/ui/ErrorBoundary.jsx';
+import { PageSkeleton } from '../components/ui/LoadingSkeleton.jsx';
 import NotificationMenu from '../components/admin/NotificationMenu.jsx';
 import { useAuth } from '../hooks/useAuth.js';
 import { useDropdown } from '../hooks/useDropdown.js';
@@ -112,6 +114,7 @@ function ProfileDropdown() {
 }
 
 export default function AdminLayout() {
+  const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -129,7 +132,11 @@ export default function AdminLayout() {
           </div>
         </header>
         <main className="p-4 sm:p-6">
-          <Outlet />
+          <ErrorBoundary resetKey={pathname}>
+            <Suspense fallback={<PageSkeleton />}>
+              <Outlet />
+            </Suspense>
+          </ErrorBoundary>
         </main>
       </div>
     </div>

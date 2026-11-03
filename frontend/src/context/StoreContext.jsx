@@ -44,13 +44,15 @@ export function StoreProvider({ children }) {
 
   const addToCart = useCallback(
     async (productId, quantity = 1) => {
-      if (!requireCustomer()) return;
+      if (!requireCustomer()) return false;
       try {
         const { data } = await apiPost('/cart/items', { productId, quantity });
         setCart(data);
         toast.success('Added to cart');
+        return true;
       } catch (error) {
         toast.error(error.message);
+        return false;
       }
     },
     [requireCustomer, toast],

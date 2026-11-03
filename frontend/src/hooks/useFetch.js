@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { apiGet } from '../services/api.js';
 
 // Loads one API path, ignoring responses from requests that have been superseded.
+// A null path loads nothing, for data that is only sometimes needed.
 export const useFetch = (path) => {
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -10,6 +11,10 @@ export const useFetch = (path) => {
 
   const reload = useCallback(async () => {
     latest.current += 1;
+    if (!path) {
+      setLoading(false);
+      return;
+    }
     const request = latest.current;
     setLoading(true);
     setError('');

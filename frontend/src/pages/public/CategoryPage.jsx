@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import ErrorState from '../../components/admin/ErrorState.jsx';
+import ErrorState from '../../components/ui/ErrorState.jsx';
 import ProductListing from '../../components/store/ProductListing.jsx';
 import StorePage from '../../components/store/StorePage.jsx';
 import { useFetch } from '../../hooks/useFetch.js';

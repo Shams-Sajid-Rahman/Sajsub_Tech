@@ -5,10 +5,10 @@ import { useToast } from '../../hooks/useToast.js';
 import { apiDelete, apiPatch, apiPost, apiPut } from '../../services/api.js';
 import { RowAction } from './AdminPage.jsx';
 import ConfirmDialog from './ConfirmDialog.jsx';
-import ErrorState from './ErrorState.jsx';
+import ErrorState from '../ui/ErrorState.jsx';
 import { ACCEPTED_IMAGES, findImageProblem, MAX_IMAGE_MB, toFormData } from './imageFiles.js';
-import Modal from './Modal.jsx';
-import Skeleton from './Skeleton.jsx';
+import Modal from '../ui/Modal.jsx';
+import LoadingSkeleton from '../ui/LoadingSkeleton.jsx';
 
 export default function ProductImagesModal({ product, onClose, onChanged }) {
   const path = `/admin/products/${product.id}`;
@@ -62,7 +62,7 @@ export default function ProductImagesModal({ product, onClose, onChanged }) {
   const images = data?.images ?? [];
 
   return (
-    <Modal wide title={`Images: ${product.name}`} onClose={onClose}>
+    <Modal size="lg" title={`Images: ${product.name}`} onClose={onClose}>
       <input ref={addInput} type="file" multiple accept={ACCEPTED_IMAGES} onChange={handleAdd} aria-label="Add images" className="hidden" />
       <input ref={replaceInput} type="file" accept={ACCEPTED_IMAGES} onChange={handleReplace} aria-label="Replacement image" className="hidden" />
 
@@ -80,7 +80,7 @@ export default function ProductImagesModal({ product, onClose, onChanged }) {
       </div>
 
       {error && <ErrorState message={error} onRetry={reload} />}
-      {loading && !data && <Skeleton className="h-40" />}
+      {loading && !data && <LoadingSkeleton className="h-40" />}
       {data && images.length === 0 && <p className="rounded-lg border border-dashed border-line p-8 text-center text-sm text-muted">No images yet.</p>}
 
       <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3">

@@ -2,12 +2,12 @@ import { useState } from 'react';
 import AdminPage, { RowAction } from '../../components/admin/AdminPage.jsx';
 import ConfirmDialog from '../../components/admin/ConfirmDialog.jsx';
 import DataTable from '../../components/admin/DataTable.jsx';
-import ErrorState from '../../components/admin/ErrorState.jsx';
+import ErrorState from '../../components/ui/ErrorState.jsx';
 import ListToolbar from '../../components/admin/ListToolbar.jsx';
-import Modal from '../../components/admin/Modal.jsx';
+import Modal from '../../components/ui/Modal.jsx';
 import RefundModal from '../../components/admin/RefundModal.jsx';
 import ResourceForm from '../../components/admin/ResourceForm.jsx';
-import Skeleton from '../../components/admin/Skeleton.jsx';
+import LoadingSkeleton from '../../components/ui/LoadingSkeleton.jsx';
 import StatusAction from '../../components/admin/StatusAction.jsx';
 import StatusBadge from '../../components/admin/StatusBadge.jsx';
 import { useAdminList } from '../../hooks/useAdminList.js';
@@ -48,9 +48,9 @@ function OrderDetails({ orderId, onClose, onChanged }) {
   };
 
   return (
-    <Modal wide title={order ? `Order ${order.orderNumber}` : 'Order'} onClose={onClose}>
+    <Modal size="lg" title={order ? `Order ${order.orderNumber}` : 'Order'} onClose={onClose}>
       {error && <ErrorState message={error} onRetry={reload} />}
-      {loading && !order && <Skeleton className="h-40" />}
+      {loading && !order && <LoadingSkeleton className="h-40" />}
       {order && (
         <div className="space-y-5 text-sm text-navy">
           <div className="flex flex-wrap gap-2">

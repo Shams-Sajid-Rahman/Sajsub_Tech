@@ -1,13 +1,145 @@
 @import 'tailwindcss';
 
-/* Design tokens taken from docs/design/homepage-reference.png */
+/* Phones and tablets, where nothing can be revealed by hovering. */
+@custom-variant touch (@media (hover: none));
+
+/* Sajsub Tech design tokens. docs/DESIGN_SYSTEM.md explains when to use each one. */
 @theme {
   /* Inter has no taka sign or Bangla letters, so those come from Noto Sans Bengali. */
   --font-sans: 'Inter', 'Noto Sans Bengali', ui-sans-serif, system-ui, sans-serif;
-  --color-primary: #0b5cf5;
-  --color-primary-dark: #0a4bc9;
-  --color-navy: #0a1a3f;
-  --color-muted: #5b6780;
+
+  /* Brand */
+  --color-primary: #0866ff;
+  --color-primary-dark: #0550cc;
+  --color-primary-soft: #e7f0ff;
+  --color-navy: #071a3d;
+  --color-navy-light: #0f2a5f;
+  --color-accent: #22d3ee;
+  --color-accent-dark: #0e7490;
+
+  /* Surfaces and text */
+  --color-page: #f4f7fc;
   --color-line: #e3e9f4;
-  --color-page: #f4f8ff;
+  --color-muted: #56627a;
+  --color-faint: #66718a;
+
+  /* Status */
+  --color-sale: #d61f2c;
+  --color-rating: #f59e0b;
+  --color-success: #15803d;
+  --color-warning: #b45309;
+  --color-danger: #dc2626;
+
+  /* Type scale. Headings grow with the screen; body text uses Tailwind's xs, sm and base. */
+  --text-display: clamp(1.875rem, 1.2rem + 2.6vw, 2.75rem);
+  --text-display--line-height: 1.13;
+  --text-title: clamp(1.5rem, 1.3rem + 0.8vw, 1.75rem);
+  --text-title--line-height: 1.25;
+  --text-heading: clamp(1.25rem, 1.15rem + 0.4vw, 1.375rem);
+  --text-heading--line-height: 1.3;
+  --text-subheading: 1.0625rem;
+  --text-subheading--line-height: 1.4;
+  --text-caption: 0.6875rem;
+  --text-caption--line-height: 1.35;
+
+  /* Layout */
+  --container-page: 79.5rem;
+  --spacing-gutter: 1rem;
+  --spacing-section: 3.5rem;
+
+  /* Shape */
+  --radius-control: 0.5rem;
+  --radius-card: 0.75rem;
+  --radius-panel: 1rem;
+
+  /* Depth */
+  --shadow-card: 0 1px 2px rgb(7 26 61 / 0.05);
+  --shadow-raised: 0 12px 28px -8px rgb(7 26 61 / 0.16);
+  --shadow-overlay: 0 24px 60px -12px rgb(7 26 61 / 0.3);
+  --shadow-glow: 0 8px 24px -6px rgb(8 102 255 / 0.45);
+
+  /* Motion. utils/motion.js holds the same values for Motion components. */
+  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-shimmer: shimmer 1.4s linear infinite;
+
+  @keyframes shimmer {
+    from {
+      background-position: 200% 0;
+    }
+    to {
+      background-position: -200% 0;
+    }
+  }
+}
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']) {
+    cursor: pointer;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@utility container-page {
+  width: 100%;
+  max-width: var(--container-page);
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+
+  /* The side gutter only goes once the screen is wider than the page and its gutters. */
+  @media (width >= 81.5rem) {
+    padding-inline: 0;
+  }
+}
+
+@utility card {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background-color: #fff;
+  box-shadow: var(--shadow-card);
+}
+
+@utility input-field {
+  width: 100%;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-control);
+  background-color: #fff;
+  padding: 0.625rem 0.75rem;
+  /* Below 16px, iPhones zoom the whole page when a field gets focus. */
+  font-size: 1rem;
+  color: var(--color-navy);
+  outline: none;
+  transition: border-color 150ms, box-shadow 150ms;
+
+  @variant sm {
+    font-size: 0.875rem;
+  }
+
+  &:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgb(8 102 255 / 0.2);
+  }
+
+  &[aria-invalid='true'] {
+    border-color: var(--color-danger);
+  }
+
+  &[aria-invalid='true']:focus {
+    box-shadow: 0 0 0 3px rgb(220 38 38 / 0.2);
+  }
 }

@@ -5,7 +5,7 @@ import AdminPage, { AddButton, RowAction } from '../../components/admin/AdminPag
 import ConfirmDialog from '../../components/admin/ConfirmDialog.jsx';
 import DataTable from '../../components/admin/DataTable.jsx';
 import ListToolbar from '../../components/admin/ListToolbar.jsx';
-import Modal from '../../components/admin/Modal.jsx';
+import Modal from '../../components/ui/Modal.jsx';
 import ProductImagesModal from '../../components/admin/ProductImagesModal.jsx';
 import ResourceForm from '../../components/admin/ResourceForm.jsx';
 import StatusBadge from '../../components/admin/StatusBadge.jsx';
@@ -179,7 +179,7 @@ export default function AdminProductsPage() {
       />
       <DataTable columns={columns} list={list} emptyMessage="No products found." />
       {editing && (
-        <Modal wide title={editing.id ? 'Edit product' : 'Add product'} onClose={() => setEditing(null)}>
+        <Modal size="lg" title={editing.id ? 'Edit product' : 'Add product'} onClose={() => setEditing(null)}>
           <ResourceForm
             fields={buildFields(categories.data, brands.data, !editing.id)}
             initial={{ ...editing, categoryId: editing.category?.id, brandId: editing.brand?.id }}

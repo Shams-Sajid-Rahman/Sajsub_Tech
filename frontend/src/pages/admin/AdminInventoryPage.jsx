@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import AdminPage, { RowAction } from '../../components/admin/AdminPage.jsx';
 import DataTable from '../../components/admin/DataTable.jsx';
 import ListToolbar from '../../components/admin/ListToolbar.jsx';
-import Modal from '../../components/admin/Modal.jsx';
+import Modal from '../../components/ui/Modal.jsx';
 import ResourceForm from '../../components/admin/ResourceForm.jsx';
 import StatusBadge from '../../components/admin/StatusBadge.jsx';
 import { useAdminList } from '../../hooks/useAdminList.js';

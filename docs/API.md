@@ -229,4 +229,10 @@ Called by SSLCommerz or the customer's browser, as form posts with no session or
 | POST | `/payments/sslcommerz/success`, `/fail`, `/cancel` | Verifies, then redirects the browser to the order page |
 | POST | `/payments/sslcommerz/ipn` | Server notification. Needs a valid signature |
 
-`GET /products` also accepts `inStock` and `onSale` (`true` or `false`), and `sort=oldest`.
+`GET /products` also accepts `inStock` and `onSale` (`true` or `false`), `sort=oldest`, and `slugs` (up to 12 comma-separated product slugs).
+
+| Method | Path | Access | Description |
+| --- | --- | --- | --- |
+| GET | `/products/best-sellers` | Public | Query: `limit` (at most 24). Products with real sales, most sold first. Unpaid, cancelled and refunded orders do not count, so the list is empty until there are sales |
+| GET | `/reviews` | Public | Query: `limit` (at most 12). Recent reviews rated 4 or 5 with a comment. Authors show as first name and last initial |
+| POST | `/newsletter` | Public, CSRF | Body: `email`. Same response whether or not the email is already subscribed. 20 requests per 15 minutes |

@@ -8,7 +8,7 @@ export default function StarRating({ value, size = 10 }) {
           key={star}
           aria-hidden="true"
           style={{ width: size, height: size }}
-          className={star <= Math.round(value) ? 'fill-[#f5a623] text-[#f5a623]' : 'fill-slate-200 text-slate-200'}
+          className={star <= Math.round(value) ? 'fill-rating text-rating' : 'fill-slate-200 text-slate-200'}
         />
       ))}
     </span>

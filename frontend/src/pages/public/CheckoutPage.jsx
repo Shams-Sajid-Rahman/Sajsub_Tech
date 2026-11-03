@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import ErrorState from '../../components/admin/ErrorState.jsx';
-import Skeleton from '../../components/admin/Skeleton.jsx';
+import ErrorState from '../../components/ui/ErrorState.jsx';
+import LoadingSkeleton from '../../components/ui/LoadingSkeleton.jsx';
 import FormField from '../../components/FormField.jsx';
 import FormMessage from '../../components/FormMessage.jsx';
 import OrderSummary from '../../components/store/OrderSummary.jsx';
@@ -112,7 +112,7 @@ function AddressSection({ selectedId, onSelect, error }) {
     <section className={`${CARD} p-5`}>
       <h2 className="mb-3 font-bold text-navy">Shipping address</h2>
       {loadError && <ErrorState message={loadError} onRetry={reload} />}
-      {loading && !addresses && <Skeleton className="h-24" />}
+      {loading && !addresses && <LoadingSkeleton className="h-24" />}
       <ul className="space-y-2">
         {(addresses ?? []).map((address) => (
           <li key={address.id} className={`flex items-start gap-3 rounded-lg border p-3 ${selectedId === address.id ? 'border-primary bg-page' : 'border-line'}`}>
@@ -196,7 +196,7 @@ export default function CheckoutPage() {
   if (!cart) {
     return (
       <StorePage title="Checkout">
-        <Skeleton className="h-64 rounded-xl" />
+        <LoadingSkeleton className="h-64 rounded-xl" />
       </StorePage>
     );
   }

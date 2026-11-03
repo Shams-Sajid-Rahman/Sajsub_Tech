@@ -8,7 +8,7 @@ import AdminPage, { AddButton, RowAction } from './AdminPage.jsx';
 import ConfirmDialog from './ConfirmDialog.jsx';
 import DataTable from './DataTable.jsx';
 import ListToolbar from './ListToolbar.jsx';
-import Modal from './Modal.jsx';
+import Modal from '../ui/Modal.jsx';
 import ResourceForm from './ResourceForm.jsx';
 import StatusBadge from './StatusBadge.jsx';
 

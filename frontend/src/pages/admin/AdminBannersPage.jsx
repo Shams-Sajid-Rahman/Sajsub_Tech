@@ -3,7 +3,7 @@ import AdminPage, { AddButton, RowAction } from '../../components/admin/AdminPag
 import ConfirmDialog from '../../components/admin/ConfirmDialog.jsx';
 import DataTable from '../../components/admin/DataTable.jsx';
 import ListToolbar from '../../components/admin/ListToolbar.jsx';
-import Modal from '../../components/admin/Modal.jsx';
+import Modal from '../../components/ui/Modal.jsx';
 import ResourceForm from '../../components/admin/ResourceForm.jsx';
 import StatusBadge from '../../components/admin/StatusBadge.jsx';
 import { useAdminList } from '../../hooks/useAdminList.js';
@@ -79,7 +79,7 @@ export default function AdminBannersPage() {
       />
       <DataTable columns={columns} list={list} emptyMessage="No banners found." />
       {editing && (
-        <Modal wide title={editing.id ? 'Edit banner' : 'Add banner'} onClose={() => setEditing(null)}>
+        <Modal size="lg" title={editing.id ? 'Edit banner' : 'Add banner'} onClose={() => setEditing(null)}>
           <ResourceForm fields={FIELDS} initial={editing} submitLabel={editing.id ? 'Save changes' : 'Create banner'} onSubmit={save} />
         </Modal>
       )}

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import ErrorState from '../../components/admin/ErrorState.jsx';
-import Pagination from '../../components/admin/Pagination.jsx';
-import Skeleton from '../../components/admin/Skeleton.jsx';
+import ErrorState from '../../components/ui/ErrorState.jsx';
+import Pagination from '../../components/ui/Pagination.jsx';
+import LoadingSkeleton from '../../components/ui/LoadingSkeleton.jsx';
 import StatusBadge from '../../components/admin/StatusBadge.jsx';
 import StorePage, { CARD } from '../../components/store/StorePage.jsx';
 import { useFetch } from '../../hooks/useFetch.js';
@@ -15,7 +15,7 @@ export default function OrdersPage() {
   return (
     <StorePage title="My orders">
       {error && <ErrorState message={error} onRetry={reload} />}
-      {loading && !data && <Skeleton className="h-48 rounded-xl" />}
+      {loading && !data && <LoadingSkeleton className="h-48 rounded-xl" />}
       {data?.length === 0 && (
         <p className={`${CARD} p-10 text-center text-sm text-muted`}>
           You haven't placed any orders yet. <Link to="/shop" className="font-semibold text-primary">Start shopping</Link>

@@ -3,7 +3,7 @@ import { useToast } from '../../hooks/useToast.js';
 import { apiDelete, apiPut } from '../../services/api.js';
 import { RowAction } from './AdminPage.jsx';
 import { ACCEPTED_IMAGES, findImageProblem, MAX_IMAGE_MB, toFormData } from './imageFiles.js';
-import Modal from './Modal.jsx';
+import Modal from '../ui/Modal.jsx';
 
 export default function CategoryImageModal({ category, onClose, onChanged }) {
   const path = `/admin/categories/${category.id}/image`;

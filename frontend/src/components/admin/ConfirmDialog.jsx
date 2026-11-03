@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useToast } from '../../hooks/useToast.js';
-import Modal from './Modal.jsx';
+import Button from '../ui/Button.jsx';
+import Modal from '../ui/Modal.jsx';
 
 export default function ConfirmDialog({ title, message, confirmLabel, onConfirm, onClose, danger = true }) {
   const toast = useToast();
@@ -21,17 +22,12 @@ export default function ConfirmDialog({ title, message, confirmLabel, onConfirm,
     <Modal title={title} onClose={onClose}>
       <p className="text-sm text-muted">{message}</p>
       <div className="mt-5 flex justify-end gap-2">
-        <button type="button" onClick={onClose} className="rounded-lg border border-line px-4 py-2 text-sm font-semibold text-navy hover:border-primary">
+        <Button variant="outline" onClick={onClose}>
           Cancel
-        </button>
-        <button
-          type="button"
-          onClick={handleConfirm}
-          disabled={working}
-          className={`rounded-lg px-4 py-2 text-sm font-semibold text-white disabled:opacity-60 ${danger ? 'bg-red-600 hover:bg-red-700' : 'bg-primary hover:bg-primary-dark'}`}
-        >
+        </Button>
+        <Button variant={danger ? 'danger' : 'primary'} onClick={handleConfirm} loading={working}>
           {working ? 'Please wait...' : confirmLabel}
-        </button>
+        </Button>
       </div>
     </Modal>
   );

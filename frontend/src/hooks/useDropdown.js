@@ -5,6 +5,7 @@ export const useDropdown = () => {
   const [open, setOpen] = useState(false);
   const containerRef = useRef(null);
   const close = useCallback(() => setOpen(false), []);
+  const show = useCallback(() => setOpen(true), []);
   const toggle = useCallback(() => setOpen((current) => !current), []);
 
   useEffect(() => {
@@ -23,5 +24,5 @@ export const useDropdown = () => {
     };
   }, [open, close]);
 
-  return { open, toggle, close, containerRef };
+  return { open, show, toggle, close, containerRef };
 };

@@ -1,7 +1,7 @@
 import { ImageOff, Minus, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Skeleton from '../../components/admin/Skeleton.jsx';
+import LoadingSkeleton from '../../components/ui/LoadingSkeleton.jsx';
 import OrderSummary from '../../components/store/OrderSummary.jsx';
 import StorePage, { CARD } from '../../components/store/StorePage.jsx';
 import { useStore } from '../../hooks/useStore.js';
@@ -33,7 +33,7 @@ export default function CartPage() {
   if (!cart) {
     return (
       <StorePage title="My cart">
-        <Skeleton className="h-64 rounded-xl" />
+        <LoadingSkeleton className="h-64 rounded-xl" />
       </StorePage>
     );
   }

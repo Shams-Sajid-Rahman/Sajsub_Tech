@@ -1,6 +1,9 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import ErrorBoundary from './components/ui/ErrorBoundary.jsx';
+import { PageSkeleton } from './components/ui/LoadingSkeleton.jsx';
+import MotionProvider from './components/ui/MotionProvider.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { StoreProvider } from './context/StoreContext.jsx';
 import { ToastProvider } from './context/ToastContext.jsx';
@@ -40,64 +43,66 @@ const SearchPage = lazy(() => import('./pages/public/SearchPage.jsx'));
 const ShopPage = lazy(() => import('./pages/public/ShopPage.jsx'));
 const WishlistPage = lazy(() => import('./pages/public/WishlistPage.jsx'));
 
-const PageLoading = () => <p className="p-8 text-center text-sm text-muted">Loading...</p>;
-
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <ToastProvider>
-          <StoreProvider>
-            <Suspense fallback={<PageLoading />}>
-              <Routes>
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
-                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                <Route path="/reset-password" element={<ResetPasswordPage />} />
-                <Route path="/admin/login" element={<AdminLoginPage />} />
-
-                <Route element={<StoreLayout />}>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/shop" element={<ShopPage />} />
-                  <Route path="/search" element={<SearchPage />} />
-                  <Route path="/category/:slug" element={<CategoryPage />} />
-                  <Route path="/product/:slug" element={<ProductPage />} />
-                  <Route path="/about" element={<AboutPage />} />
-                  <Route path="/blog" element={<BlogPage />} />
-                  <Route path="/contact" element={<ContactPage />} />
-                  <Route element={<ProtectedRoute role="CUSTOMER" loginPath="/login" />}>
-                    <Route path="/account" element={<AccountPage />} />
-                    <Route path="/wishlist" element={<WishlistPage />} />
-                    <Route path="/cart" element={<CartPage />} />
-                    <Route path="/checkout" element={<CheckoutPage />} />
-                    <Route path="/orders" element={<OrdersPage />} />
-                    <Route path="/orders/:id" element={<OrderDetailsPage />} />
-                  </Route>
-                </Route>
-
-                <Route element={<ProtectedRoute role="ADMIN" loginPath="/admin/login" />}>
-                  <Route path="/admin" element={<AdminLayout />}>
-                    <Route index element={<AdminDashboardPage />} />
-                    <Route path="users" element={<AdminUsersPage />} />
-                    <Route path="products" element={<AdminProductsPage />} />
-                    <Route path="categories" element={<AdminCategoriesPage />} />
-                    <Route path="brands" element={<AdminBrandsPage />} />
-                    <Route path="inventory" element={<AdminInventoryPage />} />
-                    <Route path="orders" element={<AdminOrdersPage />} />
-                    <Route path="payments" element={<AdminPaymentsPage />} />
-                    <Route path="banners" element={<AdminBannersPage />} />
-                    <Route path="settings" element={<AdminSettingsPage />} />
-                    <Route path="logs" element={<AdminLogsPage />} />
-                    <Route path="profile" element={<AdminProfilePage />} />
-                  </Route>
-                </Route>
-
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
-            </Suspense>
-          </StoreProvider>
-        </ToastProvider>
-      </AuthProvider>
+      <MotionProvider>
+        <AuthProvider>
+          <ToastProvider>
+            <StoreProvider>
+              <ErrorBoundary>
+                <Suspense fallback={<PageSkeleton />}>
+                  <Routes>
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                    <Route path="/reset-password" element={<ResetPasswordPage />} />
+                    <Route path="/admin/login" element={<AdminLoginPage />} />
+    
+                    <Route element={<StoreLayout />}>
+                      <Route path="/" element={<HomePage />} />
+                      <Route path="/shop" element={<ShopPage />} />
+                      <Route path="/search" element={<SearchPage />} />
+                      <Route path="/category/:slug" element={<CategoryPage />} />
+                      <Route path="/product/:slug" element={<ProductPage />} />
+                      <Route path="/about" element={<AboutPage />} />
+                      <Route path="/blog" element={<BlogPage />} />
+                      <Route path="/contact" element={<ContactPage />} />
+                      <Route element={<ProtectedRoute role="CUSTOMER" loginPath="/login" />}>
+                        <Route path="/account" element={<AccountPage />} />
+                        <Route path="/wishlist" element={<WishlistPage />} />
+                        <Route path="/cart" element={<CartPage />} />
+                        <Route path="/checkout" element={<CheckoutPage />} />
+                        <Route path="/orders" element={<OrdersPage />} />
+                        <Route path="/orders/:id" element={<OrderDetailsPage />} />
+                      </Route>
+                    </Route>
+    
+                    <Route element={<ProtectedRoute role="ADMIN" loginPath="/admin/login" />}>
+                      <Route path="/admin" element={<AdminLayout />}>
+                        <Route index element={<AdminDashboardPage />} />
+                        <Route path="users" element={<AdminUsersPage />} />
+                        <Route path="products" element={<AdminProductsPage />} />
+                        <Route path="categories" element={<AdminCategoriesPage />} />
+                        <Route path="brands" element={<AdminBrandsPage />} />
+                        <Route path="inventory" element={<AdminInventoryPage />} />
+                        <Route path="orders" element={<AdminOrdersPage />} />
+                        <Route path="payments" element={<AdminPaymentsPage />} />
+                        <Route path="banners" element={<AdminBannersPage />} />
+                        <Route path="settings" element={<AdminSettingsPage />} />
+                        <Route path="logs" element={<AdminLogsPage />} />
+                        <Route path="profile" element={<AdminProfilePage />} />
+                      </Route>
+                    </Route>
+    
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                  </Routes>
+                </Suspense>
+              </ErrorBoundary>
+            </StoreProvider>
+          </ToastProvider>
+        </AuthProvider>
+      </MotionProvider>
     </BrowserRouter>
   );
 }

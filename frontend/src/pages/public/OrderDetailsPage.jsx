@@ -2,8 +2,8 @@ import { Check, ImageOff, Truck } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import ConfirmDialog from '../../components/admin/ConfirmDialog.jsx';
-import ErrorState from '../../components/admin/ErrorState.jsx';
-import Skeleton from '../../components/admin/Skeleton.jsx';
+import ErrorState from '../../components/ui/ErrorState.jsx';
+import LoadingSkeleton from '../../components/ui/LoadingSkeleton.jsx';
 import StatusBadge from '../../components/admin/StatusBadge.jsx';
 import FormMessage from '../../components/FormMessage.jsx';
 import OrderSummary from '../../components/store/OrderSummary.jsx';
@@ -178,7 +178,7 @@ export default function OrderDetailsPage() {
   if (loading && !order) {
     return (
       <StorePage>
-        <Skeleton className="h-64 rounded-xl" />
+        <LoadingSkeleton className="h-64 rounded-xl" />
       </StorePage>
     );
   }

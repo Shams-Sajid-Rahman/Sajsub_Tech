@@ -1,6 +1,7 @@
-import ErrorState from './ErrorState.jsx';
-import Pagination from './Pagination.jsx';
-import Skeleton from './Skeleton.jsx';
+import EmptyState from '../ui/EmptyState.jsx';
+import ErrorState from '../ui/ErrorState.jsx';
+import Pagination from '../ui/Pagination.jsx';
+import LoadingSkeleton from '../ui/LoadingSkeleton.jsx';
 
 const SKELETON_ROWS = 5;
 
@@ -11,7 +12,7 @@ export default function DataTable({ columns, list, emptyMessage = 'Nothing found
   if (error) return <ErrorState message={error} onRetry={reload} />;
 
   return (
-    <div className="overflow-hidden rounded-xl border border-line bg-white">
+    <div className="card overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full min-w-[640px] text-left text-sm">
           <thead className="border-b border-line bg-slate-50 text-xs uppercase tracking-wide text-muted">
@@ -29,7 +30,7 @@ export default function DataTable({ columns, list, emptyMessage = 'Nothing found
                   <tr key={index}>
                     {columns.map(({ header }) => (
                       <td key={header} className="px-4 py-3">
-                        <Skeleton className="h-4 w-full" />
+                        <LoadingSkeleton className="h-4 w-full" />
                       </td>
                     ))}
                   </tr>
@@ -46,7 +47,7 @@ export default function DataTable({ columns, list, emptyMessage = 'Nothing found
           </tbody>
         </table>
       </div>
-      {!loading && rows.length === 0 && <p className="p-8 text-center text-sm text-muted">{emptyMessage}</p>}
+      {!loading && rows.length === 0 && <EmptyState compact message={emptyMessage} />}
       <Pagination meta={meta} onPageChange={setPage} />
     </div>
   );

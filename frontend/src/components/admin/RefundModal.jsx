@@ -1,7 +1,7 @@
 import { useToast } from '../../hooks/useToast.js';
 import { apiPost } from '../../services/api.js';
 import { formatMoney } from '../../utils/format.js';
-import Modal from './Modal.jsx';
+import Modal from '../ui/Modal.jsx';
 import ResourceForm from './ResourceForm.jsx';
 
 const FIELDS = [

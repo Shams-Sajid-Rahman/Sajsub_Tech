@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useFetch } from '../../hooks/useFetch.js';
-import ErrorState from '../admin/ErrorState.jsx';
-import Pagination from '../admin/Pagination.jsx';
+import ErrorState from '../ui/ErrorState.jsx';
+import Pagination from '../ui/Pagination.jsx';
 import ProductCard, { ProductCardSkeleton } from './ProductCard.jsx';
 
 const PAGE_SIZE = 12;

@@ -1,12 +1,15 @@
-import { Heart, ImageOff, Minus, Plus, ShoppingCart } from 'lucide-react';
-import { useState } from 'react';
+import { Heart, ImageOff, ShoppingCart } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import ErrorState from '../../components/admin/ErrorState.jsx';
-import Pagination from '../../components/admin/Pagination.jsx';
-import Skeleton from '../../components/admin/Skeleton.jsx';
+import Breadcrumb from '../../components/ui/Breadcrumb.jsx';
+import ErrorState from '../../components/ui/ErrorState.jsx';
+import Pagination from '../../components/ui/Pagination.jsx';
+import LoadingSkeleton from '../../components/ui/LoadingSkeleton.jsx';
 import FormMessage from '../../components/FormMessage.jsx';
 import SubmitButton from '../../components/SubmitButton.jsx';
 import ProductCard from '../../components/store/ProductCard.jsx';
+import QuantitySelector from '../../components/store/QuantitySelector.jsx';
+import StockStatus from '../../components/store/StockStatus.jsx';
 import SectionHeading from '../../components/store/SectionHeading.jsx';
 import StarRating from '../../components/store/StarRating.jsx';
 import StorePage, { CARD } from '../../components/store/StorePage.jsx';
@@ -16,8 +19,7 @@ import { useForm } from '../../hooks/useForm.js';
 import { useStore } from '../../hooks/useStore.js';
 import { apiPut } from '../../services/api.js';
 import { formatDateTime, formatMoney } from '../../utils/format.js';
-
-const MAX_QUANTITY = 99;
+import { rememberViewedProduct } from '../../utils/storage.js';
 
 function Gallery({ product }) {
   const [activeUrl, setActiveUrl] = useState(null);
@@ -50,12 +52,6 @@ function Gallery({ product }) {
   );
 }
 
-function Availability({ product }) {
-  if (!product.inStock) return <p className="text-sm font-semibold text-red-700">Out of stock</p>;
-  if (product.stockLeft) return <p className="text-sm font-semibold text-amber-800">Only {product.stockLeft} left in stock</p>;
-  return <p className="text-sm font-semibold text-green-700">In stock</p>;
-}
-
 function PurchasePanel({ product }) {
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
   const [quantity, setQuantity] = useState(1);
@@ -74,23 +70,15 @@ function PurchasePanel({ product }) {
         {product.discountPrice && (
           <>
             <span className="text-lg font-normal text-muted line-through">{formatMoney(product.price)}</span>
-            <span className="rounded-full bg-[#e8112d] px-2.5 py-0.5 text-sm font-bold text-white">-{product.discountPercent}%</span>
+            <span className="rounded-full bg-sale px-2.5 py-0.5 text-sm font-bold text-white">-{product.discountPercent}%</span>
           </>
         )}
       </p>
-      <div className="mt-3"><Availability product={product} /></div>
+      <div className="mt-3"><StockStatus product={product} /></div>
       {product.shortDescription && <p className="mt-4 text-sm text-muted">{product.shortDescription}</p>}
 
       <div className="mt-6 flex flex-wrap items-center gap-3">
-        <div className="flex items-center rounded-lg border border-line bg-white">
-          <button type="button" aria-label="Decrease quantity" disabled={quantity <= 1} onClick={() => setQuantity(quantity - 1)} className="p-3 text-navy disabled:opacity-40">
-            <Minus aria-hidden="true" className="size-4" />
-          </button>
-          <span aria-live="polite" className="w-8 text-center text-sm font-semibold tabular-nums text-navy">{quantity}</span>
-          <button type="button" aria-label="Increase quantity" disabled={quantity >= MAX_QUANTITY} onClick={() => setQuantity(quantity + 1)} className="p-3 text-navy disabled:opacity-40">
-            <Plus aria-hidden="true" className="size-4" />
-          </button>
-        </div>
+        <QuantitySelector value={quantity} onChange={setQuantity} />
         <button
           type="button"
           disabled={!product.inStock}
@@ -106,7 +94,7 @@ function PurchasePanel({ product }) {
           onClick={() => toggleWishlist(product.id)}
           className="flex h-[46px] items-center gap-2 rounded-lg border border-line bg-white px-4 text-sm font-semibold text-navy hover:border-primary"
         >
-          <Heart aria-hidden="true" className={`size-[18px] ${saved ? 'fill-[#e8112d] text-[#e8112d]' : ''}`} />
+          <Heart aria-hidden="true" className={`size-[18px] ${saved ? 'fill-sale text-sale' : ''}`} />
           {saved ? 'Saved' : 'Add to Wishlist'}
         </button>
       </div>
@@ -181,6 +169,10 @@ export default function ProductPage() {
   const { data: product, loading, error, reload } = useFetch(`/products/${slug}`);
   const related = useFetch(`/products/${slug}/related`);
 
+  useEffect(() => {
+    if (product) rememberViewedProduct(product.slug);
+  }, [product]);
+
   if (error) {
     return (
       <StorePage>
@@ -191,7 +183,7 @@ export default function ProductPage() {
   if (loading && !product) {
     return (
       <StorePage>
-        <Skeleton className="h-96 rounded-xl" />
+        <LoadingSkeleton className="h-96 rounded-xl" />
       </StorePage>
     );
   }
@@ -199,11 +191,9 @@ export default function ProductPage() {
 
   return (
     <StorePage>
-      <nav aria-label="Breadcrumb" className="mb-4 text-xs text-muted">
-        <Link to="/" className="hover:text-primary">Home</Link> /{' '}
-        <Link to={`/category/${product.category.slug}`} className="hover:text-primary">{product.category.name}</Link> /{' '}
-        <span className="text-navy">{product.name}</span>
-      </nav>
+      <div className="mb-4">
+        <Breadcrumb items={[{ label: 'Home', to: '/' }, { label: product.category.name, to: `/category/${product.category.slug}` }, { label: product.name }]} />
+      </div>
       <div className="grid gap-6 md:grid-cols-2 lg:gap-10">
         <Gallery key={product.id} product={product} />
         <PurchasePanel key={`buy-${product.id}`} product={product} />
