@@ -62,7 +62,7 @@ function FieldInput({ field, form }) {
           <textarea {...shared} value={value} rows={3} className={INPUT} />
         )}
         {help && <p className="mt-1 text-xs text-muted">{help}</p>}
-        {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
+        {error && <p className="mt-1 text-xs text-red-700">{error}</p>}
       </div>
     );
   }

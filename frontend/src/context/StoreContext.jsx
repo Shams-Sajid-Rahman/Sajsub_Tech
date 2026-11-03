@@ -16,7 +16,7 @@ export function StoreProvider({ children }) {
   const [siteLoaded, setSiteLoaded] = useState(false);
   const [cart, setCart] = useState(null);
   const [wishlist, setWishlist] = useState([]);
-  const isCustomer = user?.role === 'CUSTOMER';
+  const isCustomer = Boolean(user);
 
   useEffect(() => {
     apiGet('/site')
@@ -37,10 +37,9 @@ export function StoreProvider({ children }) {
 
   const requireCustomer = useCallback(() => {
     if (isCustomer) return true;
-    if (user) toast.error('Shopping features are for customer accounts.');
-    else navigate('/login', { state: { from: location.pathname } });
+    navigate('/login', { state: { from: location.pathname } });
     return false;
-  }, [isCustomer, user, toast, navigate, location.pathname]);
+  }, [isCustomer, navigate, location.pathname]);
 
   const addToCart = useCallback(
     async (productId, quantity = 1) => {

@@ -24,7 +24,7 @@ export default function LoginPage() {
       footer={
         <>
           New here?{' '}
-          <Link to="/register" className="font-semibold text-primary">
+          <Link to="/register" className="font-semibold text-primary-dark">
             Create an account
           </Link>
         </>
@@ -35,7 +35,7 @@ export default function LoginPage() {
         <FormField label="Email" name="email" type="email" autoComplete="email" required value={form.values.email} onChange={form.handleChange} error={form.fieldErrors.email} />
         <FormField label="Password" name="password" type="password" autoComplete="current-password" required value={form.values.password} onChange={form.handleChange} error={form.fieldErrors.password} />
         <div className="text-right">
-          <Link to="/forgot-password" className="text-sm font-medium text-primary">
+          <Link to="/forgot-password" className="text-sm font-medium text-primary-dark">
             Forgot password?
           </Link>
         </div>

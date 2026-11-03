@@ -1,5 +1,8 @@
 import { useState } from 'react';
+import { ChevronRight, Package } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Button from '../../components/ui/Button.jsx';
+import EmptyState from '../../components/ui/EmptyState.jsx';
 import ErrorState from '../../components/ui/ErrorState.jsx';
 import Pagination from '../../components/ui/Pagination.jsx';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton.jsx';
@@ -17,16 +20,16 @@ export default function OrdersPage() {
       {error && <ErrorState message={error} onRetry={reload} />}
       {loading && !data && <LoadingSkeleton className="h-48 rounded-xl" />}
       {data?.length === 0 && (
-        <p className={`${CARD} p-10 text-center text-sm text-muted`}>
-          You haven't placed any orders yet. <Link to="/shop" className="font-semibold text-primary">Start shopping</Link>
-        </p>
+        <div className={CARD}>
+          <EmptyState icon={Package} title="No orders yet" message="You haven't placed any orders yet." action={<Button to="/shop">Start shopping</Button>} />
+        </div>
       )}
       {data?.length > 0 && (
         <div className={`${CARD} overflow-hidden`}>
           <ul className="divide-y divide-line">
             {data.map((order) => (
               <li key={order.id}>
-                <Link to={`/orders/${order.id}`} className="flex flex-wrap items-center justify-between gap-3 p-4 hover:bg-page">
+                <Link to={`/orders/${order.id}`} className="flex flex-wrap items-center justify-between gap-3 p-4 transition hover:bg-page">
                   <span className="min-w-0">
                     <span className="block text-sm font-semibold text-navy">{order.orderNumber}</span>
                     <span className="block text-xs text-muted">
@@ -37,6 +40,7 @@ export default function OrdersPage() {
                     <StatusBadge value={order.status} />
                     <StatusBadge value={order.paymentStatus} />
                     <span className="text-sm font-bold tabular-nums text-navy">{formatMoney(order.totalAmount)}</span>
+                    <ChevronRight aria-hidden="true" className="size-4 text-muted" />
                   </span>
                 </Link>
               </li>

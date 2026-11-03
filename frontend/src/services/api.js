@@ -1,7 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 // Refreshing with these would be pointless or would hide a wrong-password message.
-const NO_REFRESH_PATHS = ['/auth/login', '/admin/auth/login', '/auth/refresh', '/auth/logout'];
+const NO_REFRESH_PATHS = ['/auth/login', '/admin/auth/login', '/auth/refresh', '/admin/auth/refresh', '/auth/logout', '/admin/auth/logout'];
 
 export class ApiRequestError extends Error {
   constructor(status, message, errors) {
@@ -12,7 +12,8 @@ export class ApiRequestError extends Error {
 }
 
 let csrfTokenPromise;
-let refreshPromise;
+// The store and the dashboard are separate logins, so each refreshes on its own.
+const refreshPromises = {};
 
 const getCsrfToken = () => {
   csrfTokenPromise ??= fetch(`${API_URL}/auth/csrf-token`, { credentials: 'include' })
@@ -43,13 +44,14 @@ const send = async (method, path, body) => {
 };
 
 // Tabs and parallel requests share one refresh, because each refresh token works only once.
-const refreshSession = () => {
-  refreshPromise ??= send('POST', '/auth/refresh')
+const refreshSession = (path) => {
+  const refreshPath = path.startsWith('/admin') ? '/admin/auth/refresh' : '/auth/refresh';
+  refreshPromises[refreshPath] ??= send('POST', refreshPath)
     .then((response) => response.ok)
     .finally(() => {
-      refreshPromise = undefined;
+      delete refreshPromises[refreshPath];
     });
-  return refreshPromise;
+  return refreshPromises[refreshPath];
 };
 
 const parse = async (response) => {
@@ -63,7 +65,7 @@ const parse = async (response) => {
 const request = async (method, path, body) => {
   let response = await send(method, path, body);
 
-  if (response.status === 401 && !NO_REFRESH_PATHS.includes(path) && (await refreshSession())) {
+  if (response.status === 401 && !NO_REFRESH_PATHS.includes(path) && (await refreshSession(path))) {
     response = await send(method, path, body);
   }
   if (response.status === 403 && method !== 'GET') {

@@ -18,9 +18,12 @@ export default function StoreLayout() {
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-clip bg-[#fdfdfe] bg-[radial-gradient(150px_260px_at_0_230px,#c9defd,transparent),radial-gradient(170px_280px_at_100%_240px,#cfe2fe,transparent),linear-gradient(180deg,#e3edfd_135px,#f5f8fe_450px,#fdfdfe_780px)] bg-no-repeat font-sans">
+      <a href="#content" className="sr-only rounded-control bg-primary px-4 py-2 text-sm font-semibold text-white focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[70]">
+        Skip to content
+      </a>
       <AnnouncementBar />
       <Header />
-      <div className="flex-1">
+      <div id="content" tabIndex={-1} className="flex-1 outline-none">
         {/* Inside the layout, so the header and footer stay put while a page loads. */}
         <ErrorBoundary resetKey={pathname}>
           <m.div key={pathname} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: DURATION.base, ease: EASE }}>

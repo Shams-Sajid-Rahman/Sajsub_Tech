@@ -7,12 +7,12 @@ import { useForm } from '../../hooks/useForm.js';
 import AuthLayout from '../../layouts/AuthLayout.jsx';
 
 export default function AdminLoginPage() {
-  const { adminLogin } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
   const form = useForm({ email: '', password: '' });
 
   const onSubmit = form.submitWith(async (values) => {
-    await adminLogin(values);
+    await login(values);
     navigate('/admin', { replace: true });
   });
 

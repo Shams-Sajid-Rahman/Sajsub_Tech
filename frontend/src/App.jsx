@@ -57,7 +57,7 @@ export default function App() {
                     <Route path="/register" element={<RegisterPage />} />
                     <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                     <Route path="/reset-password" element={<ResetPasswordPage />} />
-                    <Route path="/admin/login" element={<AdminLoginPage />} />
+                    <Route path="/admin/login" element={<AuthProvider admin><AdminLoginPage /></AuthProvider>} />
     
                     <Route element={<StoreLayout />}>
                       <Route path="/" element={<HomePage />} />
@@ -68,7 +68,7 @@ export default function App() {
                       <Route path="/about" element={<AboutPage />} />
                       <Route path="/blog" element={<BlogPage />} />
                       <Route path="/contact" element={<ContactPage />} />
-                      <Route element={<ProtectedRoute role="CUSTOMER" loginPath="/login" />}>
+                      <Route element={<ProtectedRoute loginPath="/login" />}>
                         <Route path="/account" element={<AccountPage />} />
                         <Route path="/wishlist" element={<WishlistPage />} />
                         <Route path="/cart" element={<CartPage />} />
@@ -78,7 +78,7 @@ export default function App() {
                       </Route>
                     </Route>
     
-                    <Route element={<ProtectedRoute role="ADMIN" loginPath="/admin/login" />}>
+                    <Route element={<AuthProvider admin><ProtectedRoute role="ADMIN" loginPath="/admin/login" /></AuthProvider>}>
                       <Route path="/admin" element={<AdminLayout />}>
                         <Route index element={<AdminDashboardPage />} />
                         <Route path="users" element={<AdminUsersPage />} />

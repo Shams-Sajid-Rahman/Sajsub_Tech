@@ -1,4 +1,5 @@
 import { Check, ImageOff, Truck } from 'lucide-react';
+import * as m from 'motion/react-m';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import ConfirmDialog from '../../components/admin/ConfirmDialog.jsx';
@@ -34,7 +35,7 @@ function TrackingTimeline({ order }) {
           const entry = reached.get(status);
           const isLast = index === statuses.length - 1;
           return (
-            <li key={`${status}-${index}`} className="relative flex gap-3 pb-5 last:pb-0">
+            <m.li key={`${status}-${index}`} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.06, duration: 0.25 }} className="relative flex gap-3 pb-5 last:pb-0">
               {!isLast && <span aria-hidden="true" className={`absolute left-[11px] top-6 h-[calc(100%-24px)] w-0.5 ${entry ? 'bg-primary' : 'bg-line'}`} />}
               <span className={`flex size-6 shrink-0 items-center justify-center rounded-full ${entry ? 'bg-primary text-white' : 'border-2 border-line bg-white'}`}>
                 {entry && <Check aria-hidden="true" className="size-3.5" />}
@@ -44,7 +45,7 @@ function TrackingTimeline({ order }) {
                 {entry && <span className="block text-xs text-muted">{formatDateTime(entry.createdAt)}</span>}
                 {entry?.note && <span className="block text-xs text-muted">{entry.note}</span>}
               </span>
-            </li>
+            </m.li>
           );
         })}
       </ol>
@@ -202,7 +203,7 @@ export default function OrderDetailsPage() {
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <StatusBadge value={order.status} />
         {CANCELLABLE_STATUSES.includes(order.status) && (
-          <button type="button" onClick={() => setCancelling(true)} className="ml-auto text-sm font-semibold text-red-600 hover:text-red-700">
+          <button type="button" onClick={() => setCancelling(true)} className="ml-auto text-sm font-semibold text-red-700 hover:text-red-700">
             Cancel order
           </button>
         )}
@@ -241,7 +242,7 @@ export default function OrderDetailsPage() {
           </section>
         </aside>
       </div>
-      <Link to="/orders" className="mt-5 inline-block text-sm font-semibold text-primary">← Back to my orders</Link>
+      <Link to="/orders" className="mt-5 inline-block text-sm font-semibold text-primary-dark">← Back to my orders</Link>
       {cancelling && (
         <ConfirmDialog
           title="Cancel this order?"

@@ -8,6 +8,8 @@ import {
   ListChecks,
   LogOut,
   Menu,
+  PanelLeftClose,
+  PanelLeftOpen,
   Package,
   Settings,
   ShoppingBag,
@@ -23,6 +25,9 @@ import { PageSkeleton } from '../components/ui/LoadingSkeleton.jsx';
 import NotificationMenu from '../components/admin/NotificationMenu.jsx';
 import { useAuth } from '../hooks/useAuth.js';
 import { useDropdown } from '../hooks/useDropdown.js';
+import { readStored, writeStored } from '../utils/storage.js';
+
+const COLLAPSED_KEY = 'sajsub.adminSidebarCollapsed';
 
 const NAV_ITEMS = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
@@ -39,16 +44,16 @@ const NAV_ITEMS = [
   { to: '/admin/profile', label: 'Profile', icon: User },
 ];
 
-function Sidebar({ open, onClose }) {
+function Sidebar({ open, collapsed, onClose }) {
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-navy text-white transition-transform lg:translate-x-0 ${
+      className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-navy text-white transition-[width,transform] duration-200 ease-standard lg:translate-x-0 ${
         open ? 'translate-x-0' : '-translate-x-full'
-      }`}
+      } ${collapsed ? 'lg:w-[72px]' : ''}`}
     >
       <div className="flex h-16 items-center justify-between px-5">
-        <Link to="/admin" onClick={onClose} className="text-xl font-bold">
-          Sajsub <span className="text-sky-400">Tech</span>
+        <Link to="/admin" onClick={onClose} aria-label="Sajsub Tech dashboard" className={`whitespace-nowrap rounded text-xl font-bold ${collapsed ? 'lg:hidden' : ''}`}>
+          Sajsub <span className="text-accent">Tech</span>
         </Link>
         <button type="button" onClick={onClose} aria-label="Close menu" className="text-slate-300 hover:text-white lg:hidden">
           <X aria-hidden="true" className="size-5" />
@@ -61,6 +66,8 @@ function Sidebar({ open, onClose }) {
             to={to}
             end={end}
             onClick={onClose}
+            title={collapsed ? label : undefined}
+            aria-label={label}
             className={({ isActive }) =>
               `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
                 isActive ? 'bg-primary text-white' : 'text-slate-300 hover:bg-white/10 hover:text-white'
@@ -68,7 +75,7 @@ function Sidebar({ open, onClose }) {
             }
           >
             <Icon aria-hidden="true" className="size-5 shrink-0" />
-            {label}
+            <span className={collapsed ? 'lg:hidden' : ''}>{label}</span>
           </NavLink>
         ))}
       </nav>
@@ -116,15 +123,30 @@ function ProfileDropdown() {
 export default function AdminLayout() {
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => readStored(COLLAPSED_KEY, false));
+
+  const toggleCollapsed = () => {
+    writeStored(COLLAPSED_KEY, !collapsed);
+    setCollapsed(!collapsed);
+  };
 
   return (
-    <div className="min-h-screen bg-white">
-      <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} />
+    <div className="min-h-screen bg-page">
+      <Sidebar open={menuOpen} collapsed={collapsed} onClose={() => setMenuOpen(false)} />
       {menuOpen && <div aria-hidden="true" onClick={() => setMenuOpen(false)} className="fixed inset-0 z-30 bg-navy/50 lg:hidden" />}
-      <div className="lg:pl-64">
+      <div className={`transition-[padding] duration-200 ease-standard ${collapsed ? 'lg:pl-[72px]' : 'lg:pl-64'}`}>
         <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-line bg-white px-4 sm:px-6">
           <button type="button" onClick={() => setMenuOpen(true)} aria-label="Open menu" className="rounded-lg p-2 text-navy hover:bg-slate-100 lg:hidden">
             <Menu aria-hidden="true" className="size-5" />
+          </button>
+          <button
+            type="button"
+            onClick={toggleCollapsed}
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            aria-expanded={!collapsed}
+            className="hidden rounded-control p-2 text-navy transition hover:bg-page lg:block"
+          >
+            {collapsed ? <PanelLeftOpen aria-hidden="true" className="size-5" /> : <PanelLeftClose aria-hidden="true" className="size-5" />}
           </button>
           <div className="ml-auto flex items-center gap-2">
             <NotificationMenu />

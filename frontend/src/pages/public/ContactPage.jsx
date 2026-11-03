@@ -31,7 +31,7 @@ export default function ContactPage() {
             <div>
               <label htmlFor="message" className="mb-1 block text-sm font-medium text-navy">Message</label>
               <textarea id="message" name="message" rows={5} value={form.values.message} onChange={form.handleChange} className="w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm text-navy outline-none focus:border-primary focus:ring-2 focus:ring-primary/30" />
-              {form.fieldErrors.message && <p className="mt-1 text-xs text-red-600">{form.fieldErrors.message}</p>}
+              {form.fieldErrors.message && <p className="mt-1 text-xs text-red-700">{form.fieldErrors.message}</p>}
             </div>
             <SubmitButton submitting={form.submitting}>Send message</SubmitButton>
           </form>

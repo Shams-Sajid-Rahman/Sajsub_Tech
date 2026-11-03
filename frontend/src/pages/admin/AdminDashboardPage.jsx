@@ -1,4 +1,6 @@
 import { AlertTriangle, Boxes, DollarSign, FolderTree, Package, PackageX, ShoppingBag, Timer, Users } from 'lucide-react';
+import { useReducedMotion } from 'motion/react';
+import * as m from 'motion/react-m';
 import { Link } from 'react-router-dom';
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import AdminPage from '../../components/admin/AdminPage.jsx';
@@ -7,9 +9,10 @@ import LoadingSkeleton from '../../components/ui/LoadingSkeleton.jsx';
 import StatusBadge from '../../components/admin/StatusBadge.jsx';
 import { useFetch } from '../../hooks/useFetch.js';
 import { formatDateTime, formatDay, formatEnum, formatMoney } from '../../utils/format.js';
+import { fadeUp, stagger } from '../../utils/motion.js';
 
 const CHART_COLOR = '#0866ff';
-const AXIS_TEXT = { fontSize: 12, fill: '#5b6780' };
+const AXIS_TEXT = { fontSize: 12, fill: '#56627a' };
 const STATUS_ORDER = ['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED', 'REFUNDED'];
 
 const STAT_CARDS = [
@@ -26,7 +29,7 @@ const STAT_CARDS = [
 function StatCard({ label, value, icon: Icon, to }) {
   const content = (
     <>
-      <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-primary">
+      <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-primary">
         <Icon aria-hidden="true" className="size-5" />
       </span>
       <span className="min-w-0">
@@ -35,9 +38,9 @@ function StatCard({ label, value, icon: Icon, to }) {
       </span>
     </>
   );
-  const className = 'flex items-center gap-3 rounded-xl border border-line bg-white p-4';
+  const className = 'card flex h-full items-center gap-3 p-4';
   return to ? (
-    <Link to={to} className={`${className} transition hover:border-primary`}>
+    <Link to={to} className={`${className} transition duration-200 ease-standard hover:-translate-y-0.5 hover:border-primary hover:shadow-raised`}>
       {content}
     </Link>
   ) : (
@@ -47,7 +50,7 @@ function StatCard({ label, value, icon: Icon, to }) {
 
 function ChartCard({ title, subtitle, empty, children }) {
   return (
-    <section className="rounded-xl border border-line bg-white p-4">
+    <section className="card p-4">
       <h2 className="font-semibold text-navy">{title}</h2>
       <p className="text-xs text-muted">{subtitle}</p>
       <div className="mt-4 h-64">
@@ -68,6 +71,7 @@ function ChartTooltip({ active, payload, label, formatLabel, formatValue }) {
 }
 
 function RevenueChart({ data }) {
+  const reducedMotion = useReducedMotion();
   const hasRevenue = data.some(({ revenue }) => revenue > 0);
   return (
     <ChartCard title="Revenue" subtitle="Paid orders, last 30 days (UTC)" empty={hasRevenue ? null : 'No paid orders in the last 30 days.'}>
@@ -76,8 +80,8 @@ function RevenueChart({ data }) {
           <CartesianGrid vertical={false} stroke="#e3e9f4" />
           <XAxis dataKey="date" tickFormatter={formatDay} tick={AXIS_TEXT} tickLine={false} axisLine={false} minTickGap={32} />
           <YAxis tickFormatter={(value) => `৳${value.toLocaleString('en-US')}`} tick={AXIS_TEXT} tickLine={false} axisLine={false} width={64} allowDecimals={false} />
-          <Tooltip cursor={{ stroke: '#5b6780', strokeDasharray: '3 3' }} content={<ChartTooltip formatLabel={formatDay} formatValue={formatMoney} />} />
-          <Area type="linear" dataKey="revenue" stroke={CHART_COLOR} strokeWidth={2} fill={CHART_COLOR} fillOpacity={0.1} activeDot={{ r: 5, stroke: '#fff', strokeWidth: 2 }} isAnimationActive={false} />
+          <Tooltip cursor={{ stroke: '#56627a', strokeDasharray: '3 3' }} content={<ChartTooltip formatLabel={formatDay} formatValue={formatMoney} />} />
+          <Area isAnimationActive={!reducedMotion} type="linear" dataKey="revenue" stroke={CHART_COLOR} strokeWidth={2} fill={CHART_COLOR} fillOpacity={0.1} activeDot={{ r: 5, stroke: '#fff', strokeWidth: 2 }} isAnimationActive={false} />
         </AreaChart>
       </ResponsiveContainer>
     </ChartCard>
@@ -85,6 +89,7 @@ function RevenueChart({ data }) {
 }
 
 function OrdersChart({ data }) {
+  const reducedMotion = useReducedMotion();
   const rows = [...data]
     .sort((a, b) => STATUS_ORDER.indexOf(a.status) - STATUS_ORDER.indexOf(b.status))
     .map(({ status, count }) => ({ status: formatEnum(status), count }));
@@ -96,7 +101,7 @@ function OrdersChart({ data }) {
           <XAxis type="number" allowDecimals={false} tick={AXIS_TEXT} tickLine={false} axisLine={false} />
           <YAxis type="category" dataKey="status" width={84} tick={AXIS_TEXT} tickLine={false} axisLine={false} />
           <Tooltip cursor={{ fill: '#f4f7fc' }} content={<ChartTooltip formatLabel={(label) => label} formatValue={(value) => `${value} orders`} />} />
-          <Bar dataKey="count" fill={CHART_COLOR} radius={[0, 4, 4, 0]} maxBarSize={20} isAnimationActive={false} />
+          <Bar dataKey="count" fill={CHART_COLOR} radius={[0, 4, 4, 0]} maxBarSize={20} isAnimationActive={!reducedMotion} />
         </BarChart>
       </ResponsiveContainer>
     </ChartCard>
@@ -105,7 +110,7 @@ function OrdersChart({ data }) {
 
 function RecentOrders({ orders }) {
   return (
-    <section className="overflow-hidden rounded-xl border border-line bg-white">
+    <section className="card overflow-hidden">
       <h2 className="border-b border-line p-4 font-semibold text-navy">Recent orders</h2>
       {orders.length === 0 ? (
         <p className="p-8 text-center text-sm text-muted">No orders yet.</p>
@@ -123,6 +128,29 @@ function RecentOrders({ orders }) {
                 <StatusBadge value={status} />
                 <span className="font-semibold tabular-nums text-navy">{formatMoney(totalAmount)}</span>
               </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
+
+function ListCard({ title, empty, rows }) {
+  return (
+    <section className="card overflow-hidden">
+      <h2 className="border-b border-line p-4 font-semibold text-navy">{title}</h2>
+      {rows.length === 0 ? (
+        <p className="p-8 text-center text-sm text-muted">{empty}</p>
+      ) : (
+        <ul className="divide-y divide-line">
+          {rows.map(({ key, primary, secondary, value }) => (
+            <li key={key} className="flex items-center justify-between gap-3 p-4 text-sm">
+              <span className="min-w-0">
+                <span className="block truncate font-medium text-navy">{primary}</span>
+                {secondary && <span className="block text-xs text-muted">{secondary}</span>}
+              </span>
+              <span className="shrink-0 tabular-nums">{value}</span>
             </li>
           ))}
         </ul>
@@ -156,16 +184,35 @@ export default function AdminDashboardPage() {
       {!error && loading && !data && <DashboardSkeleton />}
       {!error && data && (
         <div className="space-y-6">
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <m.div variants={stagger} initial="hidden" animate="visible" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {STAT_CARDS.map(({ key, label, icon, to, format }) => (
-              <StatCard key={key} label={label} icon={icon} to={to} value={format ? format(data.totals[key]) : data.totals[key].toLocaleString('en-US')} />
+              <m.div key={key} variants={fadeUp}>
+                <StatCard label={label} icon={icon} to={to} value={format ? format(data.totals[key]) : data.totals[key].toLocaleString('en-US')} />
+              </m.div>
             ))}
-          </div>
+          </m.div>
           <div className="grid gap-4 xl:grid-cols-2">
             <RevenueChart data={data.dailySales} />
             <OrdersChart data={data.ordersByStatus} />
           </div>
           <RecentOrders orders={data.recentOrders} />
+          <div className="grid items-start gap-4 lg:grid-cols-3">
+            <ListCard
+              title="Inventory alerts"
+              empty="All products are well stocked."
+              rows={data.stockAlerts.map(({ id, name, stockQuantity }) => ({ key: id, primary: name, value: <StatusBadge value={stockQuantity === 0 ? 'Out' : 'Low'} />, secondary: `${stockQuantity} left` }))}
+            />
+            <ListCard
+              title="Top products"
+              empty="No sales yet."
+              rows={data.topProducts.map(({ id, name, sold, revenue }) => ({ key: id, primary: name, secondary: `${sold} sold`, value: <span className="font-semibold text-navy">{formatMoney(revenue)}</span> }))}
+            />
+            <ListCard
+              title="New customers"
+              empty="No customers yet."
+              rows={data.newCustomers.map(({ id, firstName, lastName, createdAt, lastLoginAt }) => ({ key: id, primary: `${firstName} ${lastName}`, secondary: `Joined ${formatDateTime(createdAt)}`, value: <span className="text-xs text-muted">{lastLoginAt ? 'Active' : 'New'}</span> }))}
+            />
+          </div>
         </div>
       )}
     </AdminPage>

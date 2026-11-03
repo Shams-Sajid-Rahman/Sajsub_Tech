@@ -57,10 +57,10 @@ These work at the small sizes in the reference. They will look soft in quick vie
 | Hero | Done: previous and next controls, pauses on hover | B |
 | Product cards | Done: quick view, stock status, animations | B |
 | Page sections | Done on the homepage and About page | B |
-| Filters on phones | Not in a drawer | D |
-| Product gallery | No zoom or tabs | E |
-| Order tracking | A timeline inside order details | G |
-| Admin sidebar | Not collapsible | H |
+| Filters on phones | Done: filter drawer | D |
+| Product gallery | Done: zoom, thumbnails, tabs, Buy Now | E |
+| Order tracking | Animated timeline inside order details; no separate page | G |
+| Admin sidebar | Done: collapsible, and it remembers the choice | H |
 | About | Done: redesigned | B |
 | Blog | Empty state only; the backend has no articles | Decision needed |
 
@@ -75,7 +75,7 @@ These work at the small sizes in the reference. They will look soft in quick vie
 | Recently Viewed, recent searches | Can be kept in the browser | None |
 | Recommended Products | `GET /products/:slug/related` on product pages | No personal recommendations |
 | Top rated | `sort=rating` | None |
-| Rating filter | Ratings exist, but not as a filter | Small backend addition, planned for Phase D |
+| Rating filter | Ratings exist, but not as a filter | Done: `minRating` |
 | Best Sellers | `GET /products/best-sellers` | Empty until there are confirmed orders |
 | Customer Reviews on the homepage | `GET /reviews` | Empty until there are reviews |
 | Newsletter | `POST /newsletter` | Stores addresses only; no email is sent yet, and there is no admin page for the list |

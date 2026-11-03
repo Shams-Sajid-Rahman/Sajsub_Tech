@@ -83,7 +83,7 @@ function AccountMenu() {
                 <Link to="/register" onClick={close} className={MENU_ITEM}>Create account</Link>
               </>
             )}
-            {user && !isAdmin && (
+            {user && (
               <>
                 <Link to="/account" onClick={close} className={MENU_ITEM}>My profile</Link>
                 <Link to="/orders" onClick={close} className={MENU_ITEM}>My orders</Link>

@@ -1,5 +1,8 @@
+import { ShoppingCart } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Button from '../../components/ui/Button.jsx';
+import EmptyState from '../../components/ui/EmptyState.jsx';
 import ErrorState from '../../components/ui/ErrorState.jsx';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton.jsx';
 import FormField from '../../components/FormField.jsx';
@@ -127,22 +130,22 @@ function AddressSection({ selectedId, onSelect, error }) {
             <label htmlFor={`address-${address.id}`} className="min-w-0 flex-1 cursor-pointer text-sm">
               <span className="block font-semibold text-navy">
                 {address.fullName} · {address.phone}
-                {address.isDefault && <span className="ml-2 text-xs font-medium text-primary">Default</span>}
+                {address.isDefault && <span className="ml-2 text-xs font-medium text-primary-dark">Default</span>}
               </span>
               <span className="block text-muted">{describeAddress(address)}</span>
             </label>
-            <button type="button" onClick={() => handleDelete(address.id)} aria-label={`Delete address ${address.line1}`} className="text-xs font-semibold text-red-600 hover:text-red-700">
+            <button type="button" onClick={() => handleDelete(address.id)} aria-label={`Delete address ${address.line1}`} className="text-xs font-semibold text-red-700 hover:text-red-700">
               Delete
             </button>
           </li>
         ))}
       </ul>
-      {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-xs text-red-700">{error}</p>}
       {showForm ? (
         <NewAddressForm onSaved={handleSaved} onCancel={addresses?.length ? () => setAdding(false) : null} />
       ) : (
         addresses && (
-          <button type="button" onClick={() => setAdding(true)} className="mt-3 text-sm font-semibold text-primary">
+          <button type="button" onClick={() => setAdding(true)} className="mt-3 text-sm font-semibold text-primary-dark">
             + Add a new address
           </button>
         )
@@ -203,9 +206,9 @@ export default function CheckoutPage() {
   if (cart.items.length === 0) {
     return (
       <StorePage title="Checkout">
-        <p className={`${CARD} p-10 text-center text-sm text-muted`}>
-          Your cart is empty. <Link to="/shop" className="font-semibold text-primary">Start shopping</Link>
-        </p>
+        <div className={CARD}>
+          <EmptyState icon={ShoppingCart} title="Your cart is empty" message="Add a product before checking out." action={<Button to="/shop">Start shopping</Button>} />
+        </div>
       </StorePage>
     );
   }
@@ -221,7 +224,7 @@ export default function CheckoutPage() {
             <h2 className="mb-3 font-bold text-navy">Payment method</h2>
             <div className="space-y-2">
               {paymentMethods(Boolean(site.payments?.online)).map(({ value, label, help, disabled }) => (
-                <label key={value} className={`flex items-start gap-3 rounded-lg border p-3 text-sm ${paymentMethod === value ? 'border-primary bg-page' : 'border-line'} ${disabled ? 'opacity-60' : 'cursor-pointer'}`}>
+                <label key={value} className={`flex items-start gap-3 rounded-control border p-3 text-sm transition ${paymentMethod === value ? 'border-primary bg-primary-soft' : 'border-line'} ${disabled ? 'opacity-60' : 'cursor-pointer'}`}>
                   <input type="radio" name="paymentMethod" value={value} disabled={disabled} checked={paymentMethod === value} onChange={() => setPaymentMethod(value)} className="mt-1 accent-primary" />
                   <span>
                     <span className="block font-semibold text-navy">{label}</span>
@@ -236,7 +239,7 @@ export default function CheckoutPage() {
             <textarea id="customerNote" name="customerNote" rows={2} maxLength={1000} value={form.values.customerNote} onChange={form.handleChange} className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm text-navy" />
           </section>
         </div>
-        <form onSubmit={onSubmit} noValidate className={`${CARD} p-5`}>
+        <form onSubmit={onSubmit} noValidate className={`${CARD} p-5 lg:sticky lg:top-[102px]`}>
           <h2 className="mb-3 font-bold text-navy">Order summary</h2>
           <FormMessage>{form.error}</FormMessage>
           <ul className="my-3 space-y-2 border-b border-line pb-3 text-sm">

@@ -58,6 +58,7 @@ Inter, with Noto Sans Bengali for ৳ and Bangla text. Weights: 400 (`font-norma
 
 - **Base unit:** Tailwind's 4 px scale.
 - **Page width:** `container-page` gives 1272 px maximum, with 16 px side gutters below `xl`.
+- **Skip link:** `StoreLayout` has a "Skip to content" link for keyboard users.
 - **Sections:** `py-section` or `mt-section`, 56 px.
 
 | Breakpoint | Starts at | Layout |

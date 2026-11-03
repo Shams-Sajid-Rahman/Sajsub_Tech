@@ -61,7 +61,7 @@ export default function HeroSlider() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: DURATION.slow, ease: EASE, delay: 0.1 }}
-            className="relative z-10 px-5 pt-6 sm:pl-[38px] sm:pt-[52px]"
+            className="relative z-10 px-5 pt-6 sm:pl-[38px] sm:pt-[52px] lg:flex lg:h-full lg:flex-col lg:items-start lg:justify-center lg:pt-[16px]"
           >
             {slide.badgeText && (
               <span className="inline-flex h-[28px] items-center gap-[8px] rounded-full border border-[#2f6df0] bg-[#0b3fb0] px-[12px] text-[12px] font-semibold text-white xl:text-[13px]">

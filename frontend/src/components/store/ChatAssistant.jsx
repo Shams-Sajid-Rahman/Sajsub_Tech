@@ -1,9 +1,12 @@
-import { ImageOff, MessageSquare, RotateCcw, Send, X } from 'lucide-react';
+import { Bot, ImageOff, MessageSquare, RotateCcw, Send, X } from 'lucide-react';
+import { AnimatePresence } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useStore } from '../../hooks/useStore.js';
 import { apiDelete, apiGet, apiPost } from '../../services/api.js';
 import { formatMoney } from '../../utils/format.js';
+import { DURATION, EASE, pressable } from '../../utils/motion.js';
 
 const STORAGE_KEY = 'sajsub-chat-id';
 const MAX_MESSAGE_LENGTH = 1000;
@@ -62,7 +65,7 @@ function ProductResult({ product, onNavigate }) {
 function ChatMessage({ message, onNavigate }) {
   const isCustomer = message.role === 'user';
   return (
-    <li className={`flex flex-col gap-2 ${isCustomer ? 'items-end' : 'items-start'}`}>
+    <m.li initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: DURATION.base, ease: EASE }} className={`flex flex-col gap-2 ${isCustomer ? 'items-end' : 'items-start'}`}>
       <p className={`max-w-[85%] whitespace-pre-line break-words rounded-2xl px-3 py-2 text-sm ${isCustomer ? 'rounded-br-sm bg-primary text-white' : 'rounded-bl-sm bg-page text-navy'}`}>
         {message.content}
       </p>
@@ -73,7 +76,7 @@ function ChatMessage({ message, onNavigate }) {
           ))}
         </ul>
       )}
-    </li>
+    </m.li>
   );
 }
 
@@ -178,13 +181,23 @@ export default function ChatAssistant() {
 
   return (
     <>
+      <AnimatePresence>
       {open && (
-        <section
+        <m.section
+          initial={{ opacity: 0, y: 16, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 16, scale: 0.98 }}
+          transition={{ duration: DURATION.base, ease: EASE }}
           aria-label="Shopping assistant"
           className="fixed inset-0 z-50 flex flex-col bg-white sm:inset-auto sm:bottom-[100px] sm:right-[15px] sm:h-[560px] sm:max-h-[calc(100vh-120px)] sm:w-[380px] sm:rounded-2xl sm:border sm:border-line sm:shadow-xl"
         >
           <header className="flex items-center justify-between gap-2 border-b border-line px-4 py-3">
-            <h2 className="font-semibold text-navy">Shopping assistant</h2>
+            <h2 className="flex items-center gap-2 font-semibold text-navy">
+              <span className="flex size-8 items-center justify-center rounded-full bg-primary text-white">
+                <Bot aria-hidden="true" className="size-4" />
+              </span>
+              Shopping assistant
+            </h2>
             <span className="flex items-center gap-1">
               {messages.length > 0 && (
                 <button type="button" onClick={startNewChat} aria-label="Start a new chat" title="Start a new chat" className="rounded p-1.5 text-muted hover:text-navy">
@@ -255,17 +268,19 @@ export default function ChatAssistant() {
               </form>
             </>
           )}
-        </section>
+        </m.section>
       )}
-      <button
+      </AnimatePresence>
+      <m.button
+        {...pressable}
         type="button"
         onClick={() => setOpen((current) => !current)}
         aria-expanded={open}
         aria-label={open ? 'Close shopping assistant' : 'Open shopping assistant'}
-        className="flex size-[50px] items-center justify-center rounded-full bg-primary text-white shadow-lg hover:bg-primary-dark"
+        className="flex size-[50px] items-center justify-center rounded-full bg-primary text-white shadow-glow hover:bg-primary-dark"
       >
         {open ? <X aria-hidden="true" className="size-[22px]" /> : <MessageSquare aria-hidden="true" className="size-[22px] fill-white" />}
-      </button>
+      </m.button>
     </>
   );
 }

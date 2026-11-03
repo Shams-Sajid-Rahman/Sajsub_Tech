@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth.js';
 import { useForm } from '../hooks/useForm.js';
-import { authService } from '../services/auth.service.js';
 import FormField from './FormField.jsx';
 import FormMessage from './FormMessage.jsx';
 import SubmitButton from './SubmitButton.jsx';
 
-const CARD = 'rounded-2xl border border-line bg-white p-6 shadow-sm';
+const CARD = 'card p-6';
 
 function ProfileForm() {
   const { user, updateProfile } = useAuth();
@@ -34,12 +33,13 @@ function ProfileForm() {
 }
 
 function ChangePasswordForm() {
+  const { changePassword } = useAuth();
   const form = useForm({ currentPassword: '', newPassword: '' });
   const [saved, setSaved] = useState('');
 
   const onSubmit = form.submitWith(async (values) => {
     setSaved('');
-    await authService.changePassword(values);
+    await changePassword(values);
     form.setValues({ currentPassword: '', newPassword: '' });
     setSaved('Password changed. Other devices have been signed out.');
   });

@@ -10,6 +10,6 @@ export default function ProtectedRoute({ role, loginPath }) {
     return <p className="p-8 text-center text-sm text-muted">Loading...</p>;
   }
   if (!user) return <Navigate to={loginPath} replace state={{ from: location.pathname }} />;
-  if (user.role !== role) return <Navigate to="/" replace />;
+  if (role && user.role !== role) return <Navigate to="/" replace />;
   return <Outlet />;
 }

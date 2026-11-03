@@ -1,19 +1,21 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
-import { authService } from '../services/auth.service.js';
+import { adminAuthService, authService } from '../services/auth.service.js';
 
 export const AuthContext = createContext(null);
 
-export function AuthProvider({ children }) {
+// The store and the dashboard are separate logins, so admin pages have their own provider.
+export function AuthProvider({ admin = false, children }) {
+  const service = admin ? adminAuthService : authService;
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    authService
+    service
       .getCurrentUser()
       .then(setUser)
       .catch(() => setUser(null))
       .finally(() => setLoading(false));
-  }, []);
+  }, [service]);
 
   const signInWith = useCallback(
     (action) =>
@@ -27,23 +29,23 @@ export function AuthProvider({ children }) {
 
   const logout = useCallback(async () => {
     try {
-      await authService.logout();
+      await service.logout();
     } finally {
       setUser(null);
     }
-  }, []);
+  }, [service]);
 
   const value = useMemo(
     () => ({
       user,
       loading,
-      login: signInWith(authService.login),
-      adminLogin: signInWith(authService.adminLogin),
+      login: signInWith(service.login),
       register: signInWith(authService.register),
-      updateProfile: signInWith(authService.updateProfile),
+      updateProfile: signInWith(service.updateProfile),
+      changePassword: service.changePassword,
       logout,
     }),
-    [user, loading, signInWith, logout],
+    [user, loading, signInWith, logout, service],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

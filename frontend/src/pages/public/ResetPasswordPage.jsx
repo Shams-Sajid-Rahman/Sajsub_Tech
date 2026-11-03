@@ -19,7 +19,7 @@ export default function ResetPasswordPage() {
   });
 
   const footer = (
-    <Link to="/login" className="font-semibold text-primary">
+    <Link to="/login" className="font-semibold text-primary-dark">
       Go to log in
     </Link>
   );

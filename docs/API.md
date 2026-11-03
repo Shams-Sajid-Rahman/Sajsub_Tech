@@ -72,7 +72,7 @@ Every `POST`, `PATCH`, `PUT` and `DELETE` needs a token. Call `GET /auth/csrf-to
 | GET | `/auth/csrf-token` | Public | Get a CSRF token |
 | GET | `/auth/session` | Public | Returns `{ user, canRefresh }`. Never fails for a guest, so the store can check who is logged in without an error |
 | POST | `/auth/register` | Public | Body: `email`, `password`, `firstName`, `lastName`, optional `phone`. Always creates a `CUSTOMER`. Unknown fields such as `role` return 400 |
-| POST | `/auth/login` | Public | Body: `email`, `password`. Customer accounts only |
+| POST | `/auth/login` | Public | Body: `email`, `password`. Store login, for any account. It never opens admin routes |
 | POST | `/auth/refresh` | Refresh cookie | Rotate the refresh token and issue a new access token |
 | POST | `/auth/logout` | Public | Revoke the current session and clear cookies |
 | POST | `/auth/forgot-password` | Public | Body: `email`. Same response whether or not the account exists |
@@ -229,7 +229,7 @@ Called by SSLCommerz or the customer's browser, as form posts with no session or
 | POST | `/payments/sslcommerz/success`, `/fail`, `/cancel` | Verifies, then redirects the browser to the order page |
 | POST | `/payments/sslcommerz/ipn` | Server notification. Needs a valid signature |
 
-`GET /products` also accepts `inStock` and `onSale` (`true` or `false`), `sort=oldest`, and `slugs` (up to 12 comma-separated product slugs).
+`GET /products` also accepts `inStock` and `onSale` (`true` or `false`), `sort=oldest`, `minRating` (0 to 5), and `slugs` (up to 12 comma-separated product slugs).
 
 | Method | Path | Access | Description |
 | --- | --- | --- | --- |

@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
+import Breadcrumb from '../../components/ui/Breadcrumb.jsx';
 import ErrorState from '../../components/ui/ErrorState.jsx';
 import ProductListing from '../../components/store/ProductListing.jsx';
 import StorePage from '../../components/store/StorePage.jsx';
@@ -18,10 +19,13 @@ export default function CategoryPage() {
 
   return (
     <StorePage title={category?.name ?? ' '} subtitle={category?.description}>
+      <div className="-mt-3 mb-4">
+        <Breadcrumb items={[{ label: 'Home', to: '/' }, { label: 'Shop', to: '/shop' }, { label: category?.name ?? '...' }]} />
+      </div>
       {category?.children?.length > 0 && (
         <nav aria-label="Subcategories" className="mb-5 flex gap-2 overflow-x-auto pb-1">
           {category.children.map(({ slug: childSlug, name }) => (
-            <Link key={childSlug} to={`/category/${childSlug}`} className="shrink-0 rounded-full border border-line bg-white px-4 py-1.5 text-sm font-medium text-navy hover:border-primary hover:text-primary">
+            <Link key={childSlug} to={`/category/${childSlug}`} className="shrink-0 rounded-full border border-line bg-white px-4 py-1.5 text-sm font-medium text-navy transition hover:border-primary hover:text-primary-dark">
               {name}
             </Link>
           ))}
