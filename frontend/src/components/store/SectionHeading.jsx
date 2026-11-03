@@ -9,7 +9,7 @@ export default function SectionHeading({ title, linkTo, linkLabel, extra }) {
       </h2>
       {extra && <div className="order-last w-full sm:order-none sm:mr-auto sm:w-auto">{extra}</div>}
       {linkTo && (
-        <Link to={linkTo} className="group flex shrink-0 items-center gap-[7px] text-[11px] font-semibold text-primary-dark hover:underline">
+        <Link to={linkTo} className="group -my-2 flex shrink-0 py-2 items-center gap-[7px] text-[11px] font-semibold text-primary-dark hover:underline">
           {linkLabel}
           <ArrowRight aria-hidden="true" className="size-[14px] transition-transform duration-200 group-hover:translate-x-0.5" />
         </Link>

@@ -97,7 +97,7 @@ export default function HeroSlider() {
               <ChevronRight aria-hidden="true" className="size-5" />
             </button>
           </div>
-          <div className="absolute bottom-[10px] left-5 z-20 flex items-center gap-[10px] sm:bottom-[14px] sm:left-[38px] xl:left-[352px]">
+          <div className="absolute bottom-[10px] left-5 z-20 flex items-center gap-[10px] touch:gap-[17px] sm:bottom-[14px] sm:left-[38px] xl:left-[352px]">
             {slides.map(({ id }, index) => (
               <button
                 key={id}
@@ -105,7 +105,7 @@ export default function HeroSlider() {
                 onClick={() => setActive(index)}
                 aria-label={`Show slide ${index + 1}`}
                 aria-current={index === active}
-                className={`h-[7px] rounded-full transition-all duration-300 ease-standard ${index === active ? 'w-[16px] bg-primary' : 'w-[7px] bg-[#9fb3d6] hover:bg-white'}`}
+                className={`relative h-[7px] rounded-full transition-all before:absolute before:-inset-x-[8px] before:-inset-y-[12px] before:content-[''] duration-300 ease-standard ${index === active ? 'w-[16px] bg-primary' : 'w-[7px] bg-[#9fb3d6] hover:bg-white'}`}
               />
             ))}
           </div>

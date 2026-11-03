@@ -136,7 +136,7 @@ export default function SearchBar({ className = '' }) {
 
   return (
     <form ref={containerRef} role="search" onSubmit={onSubmit} className={`relative ${className}`}>
-      <button type="submit" aria-label="Search" className="absolute left-[12px] top-1/2 z-10 -translate-y-1/2 rounded text-navy transition hover:text-primary">
+      <button type="submit" aria-label="Search" className="absolute left-[12px] top-1/2 z-10 -translate-y-1/2 rounded text-navy transition hover:text-primary touch:left-[4px] touch:p-2">
         <Search aria-hidden="true" className="size-[18px]" />
       </button>
       <input

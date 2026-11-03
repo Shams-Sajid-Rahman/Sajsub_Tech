@@ -100,7 +100,7 @@ function AccountMenu() {
 
 function IconLink({ to, label, count, icon: Icon }) {
   return (
-    <Link to={to} aria-label={`${label}${count ? `, ${count} items` : ''}`} className="flex flex-col items-center gap-[1px] rounded text-[10px] font-medium text-navy transition hover:text-primary-dark lg:w-[50px] lg:translate-y-[6px]">
+    <Link to={to} aria-label={`${label}${count ? `, ${count} items` : ''}`} className="flex flex-col items-center gap-[1px] rounded text-[10px] touch:-m-2 touch:p-2 font-medium text-navy transition hover:text-primary-dark lg:w-[50px] lg:translate-y-[6px]">
       <span className="relative">
         <Icon aria-hidden="true" className="size-[22px]" />
         {/* The key restarts the small bump each time the count changes. */}

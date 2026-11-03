@@ -73,7 +73,7 @@ export default function AnnouncementBar() {
         <div className="xl:absolute xl:right-[184px]">
           {endsAt && <Countdown endsAt={endsAt} unitClass="bg-[#0d3fa6] text-white lg:text-[16px]" />}
         </div>
-        <button type="button" onClick={close} aria-label="Close announcement" className="absolute right-3 top-1/2 -translate-y-1/2 rounded text-accent transition hover:text-white xl:right-[122px]">
+        <button type="button" onClick={close} aria-label="Close announcement" className="absolute right-3 top-1/2 -translate-y-1/2 rounded text-accent transition hover:text-white touch:right-1 touch:p-2 xl:right-[122px]">
           <X aria-hidden="true" className="size-4" />
         </button>
       </div>
