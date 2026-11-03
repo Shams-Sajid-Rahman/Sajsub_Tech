@@ -27,30 +27,31 @@ export default function HeroSlider() {
         <img
           src={slide.imageUrl}
           alt=""
-          className="absolute bottom-0 right-0 h-[42%] w-full object-contain object-right sm:h-[48%] lg:h-full lg:w-[59%] lg:object-cover lg:[mask-image:linear-gradient(90deg,transparent,#000_12%)]"
+          fetchPriority="high"
+          className="absolute bottom-0 right-0 h-[42%] w-auto max-w-full object-contain [mask-composite:intersect] [mask-image:linear-gradient(90deg,transparent,#000_14%),linear-gradient(180deg,transparent,#000_14%)] sm:h-[48%] lg:h-full lg:w-[46%] lg:object-cover lg:[mask-image:linear-gradient(90deg,transparent,#000_12%)] xl:w-[59%]"
         />
       )}
       <div className="relative z-10 px-5 pt-6 sm:pl-[38px] sm:pt-[52px]">
         {slide.badgeText && (
-          <span className="inline-flex h-[28px] items-center gap-[8px] rounded-full border border-[#2f6df0] bg-[#0b3fb0] px-[12px] text-[12px] font-semibold text-white">
+          <span className="inline-flex h-[28px] items-center gap-[8px] rounded-full border border-[#2f6df0] bg-[#0b3fb0] px-[12px] text-[12px] font-semibold text-white xl:text-[13px]">
             <Star aria-hidden="true" className="size-[15px] fill-[#fbbf24] text-[#fbbf24]" />
             {slide.badgeText}
           </span>
         )}
-        <h1 className="mt-[12px] max-w-[390px] text-[30px] font-bold leading-[1.13] text-white sm:text-[41.5px] sm:leading-[48px]">
+        <h1 className="mt-[10px] max-w-[390px] text-[30px] font-bold leading-[1.13] text-white sm:text-[41.5px] sm:leading-[48px]">
           {slide.title}{' '}
-          {slide.highlight && <span className="bg-[linear-gradient(90deg,#2fa8ff,#1f7bff)] bg-clip-text text-transparent">{slide.highlight}</span>}
+          {slide.highlight && <span className="bg-[linear-gradient(90deg,#2fa8ff,#1f7bff)] bg-clip-text text-transparent xl:text-[45.4px]">{slide.highlight}</span>}
         </h1>
-        {slide.subtitle && <p className="mt-[10px] text-[15px] text-white sm:mt-[12px] sm:text-[18px]">{slide.subtitle}</p>}
+        {slide.subtitle && <p className="mt-[10px] text-[15px] text-white sm:mt-[13px] sm:text-[18px]">{slide.subtitle}</p>}
         {slide.buttonText && slide.linkUrl && (
-          <Link to={slide.linkUrl} className="mt-[16px] inline-flex h-[40px] items-center gap-[8px] rounded-full bg-primary px-[25px] text-[13px] font-semibold text-white hover:bg-primary-dark sm:mt-[19px]">
+          <Link to={slide.linkUrl} className="mt-[16px] inline-flex h-[40px] items-center gap-[8px] rounded-full bg-primary px-[25px] text-[13px] font-semibold text-white hover:bg-primary-dark sm:mt-[20px] xl:px-[23px]">
             {slide.buttonText}
             <ArrowRight aria-hidden="true" className="size-[16px]" />
           </Link>
         )}
       </div>
       {slides.length > 1 && (
-        <div className="absolute bottom-[10px] left-5 z-10 flex items-center gap-[10px] sm:left-[352px] sm:bottom-[14px]">
+        <div className="absolute bottom-[10px] left-5 z-10 flex items-center gap-[10px] sm:bottom-[14px] sm:left-[38px] xl:left-[352px]">
           {slides.map(({ id }, index) => (
             <button
               key={id}

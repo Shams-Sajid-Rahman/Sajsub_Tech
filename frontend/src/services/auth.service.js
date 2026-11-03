@@ -3,7 +3,11 @@ import { apiGet, apiPatch, apiPost } from './api.js';
 const data = ({ data: value }) => value;
 
 export const authService = {
-  getCurrentUser: () => apiGet('/auth/me').then(data),
+  // Guests get a plain answer here, so loading a page doesn't make failed requests.
+  getCurrentUser: async () => {
+    const { user, canRefresh } = await apiGet('/auth/session').then(data);
+    return canRefresh ? apiPost('/auth/refresh').then(data) : user;
+  },
   login: (credentials) => apiPost('/auth/login', credentials).then(data),
   adminLogin: (credentials) => apiPost('/admin/auth/login', credentials).then(data),
   register: (details) => apiPost('/auth/register', details).then(data),

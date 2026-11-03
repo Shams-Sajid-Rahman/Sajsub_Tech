@@ -43,7 +43,11 @@ Error:
 
 ## Rate limits
 
-Per IP address, per 15 minutes: 300 requests across the API, 10 failed attempts on login and change-password, and 20 requests on register, forgot-password and reset-password. Health checks are exempt. Behind a reverse proxy, set `TRUST_PROXY` to the number of proxies so client IPs are read correctly.
+Per IP address, per 15 minutes: 1000 requests across the API, 10 failed attempts on login and change-password, and 20 requests on register, forgot-password and reset-password. Health checks are exempt. Behind a reverse proxy, set `TRUST_PROXY` to the number of proxies so client IPs are read correctly.
+
+## Caching
+
+API responses are sent with `Cache-Control: no-store`. The exceptions are `/categories`, `/brands` and `/site`, which are public and cached for 60 seconds.
 
 ## Pagination
 
@@ -66,6 +70,7 @@ Every `POST`, `PATCH`, `PUT` and `DELETE` needs a token. Call `GET /auth/csrf-to
 | Method | Path | Access | Description |
 | --- | --- | --- | --- |
 | GET | `/auth/csrf-token` | Public | Get a CSRF token |
+| GET | `/auth/session` | Public | Returns `{ user, canRefresh }`. Never fails for a guest, so the store can check who is logged in without an error |
 | POST | `/auth/register` | Public | Body: `email`, `password`, `firstName`, `lastName`, optional `phone`. Always creates a `CUSTOMER`. Unknown fields such as `role` return 400 |
 | POST | `/auth/login` | Public | Body: `email`, `password`. Customer accounts only |
 | POST | `/auth/refresh` | Refresh cookie | Rotate the refresh token and issue a new access token |

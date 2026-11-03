@@ -16,33 +16,35 @@ import { useFetch } from '../../hooks/useFetch.js';
 import Skeleton from '../admin/Skeleton.jsx';
 
 const ICONS = { tablet: Tablet, shirt: Shirt, house: House, volleyball: Volleyball, sparkles: Sparkles, heart: Heart, 'book-open': BookOpen, puzzle: Puzzle };
-const ROW = 'flex h-[30.5px] items-center gap-[11px] pl-[25px] pr-[14px] text-[12px] font-medium text-navy hover:bg-page hover:text-primary';
+const MAX_ROWS = 8;
+const ROW ='flex h-[30.5px] items-center pl-[23px] pr-[10px] text-[12px] font-medium xl:text-[11.5px] text-navy hover:bg-page hover:text-primary';
 const CHEVRON = <ChevronRight aria-hidden="true" className="ml-auto size-[13px] shrink-0 text-[#5b6780]" />;
 
 export default function CategorySidebar() {
-  const { data, loading } = useFetch('/categories?menu=true&limit=8');
+  // The same request as the header menu, so the two share one call.
+  const { data, loading } = useFetch('/categories?menu=true&limit=100');
 
   return (
-    <aside className="relative z-10 -mt-[3px] hidden w-[217px] shrink-0 lg:block">
-      <Link to="/shop" className="flex h-[40px] items-center gap-[15px] rounded-t-[10px] bg-[#004efc] pl-[21px] pr-[14px] text-[12px] font-semibold text-white">
+    <aside className="relative z-[31] -mt-[3px] hidden w-[217px] shrink-0 lg:block">
+      <Link to="/shop" className="flex h-[40px] items-center gap-[13px] rounded-t-[10px] bg-[#004efc] pl-[21px] pr-[10px] text-[12px] font-semibold text-white">
         <Menu aria-hidden="true" className="size-[18px]" />
         All Categories
         <ChevronRight aria-hidden="true" className="ml-auto size-[15px]" />
       </Link>
-      <nav aria-label="Categories" className="rounded-b-[10px] border border-t-0 border-[#e6ecf7] bg-white py-[5px]">
+      <nav aria-label="Categories" className="rounded-b-[10px] border border-t-0 border-[#e6ecf7] bg-white pb-[4px] pt-[6px]">
         {loading && !data && <Skeleton className="m-3 h-64" />}
-        {(data ?? []).map(({ slug, name, icon }) => {
+        {(data ?? []).slice(0, MAX_ROWS).map(({ slug, name, icon }) => {
           const Icon = ICONS[icon] ?? ListTree;
           return (
             <Link key={slug} to={`/category/${slug}`} className={ROW}>
-              <Icon aria-hidden="true" className="size-[16px] shrink-0" />
+              <Icon aria-hidden="true" className="mr-[14px] size-[16px] shrink-0" />
               <span className="whitespace-nowrap">{name}</span>
               {CHEVRON}
             </Link>
           );
         })}
         <Link to="/shop" className={ROW}>
-          <ListTree aria-hidden="true" className="size-[16px] shrink-0" />
+          <ListTree aria-hidden="true" className="mr-[14px] size-[16px] shrink-0" />
           More Categories
           {CHEVRON}
         </Link>

@@ -13,7 +13,7 @@ export default function StoreLayout() {
   }, [pathname]);
 
   return (
-    <div className="flex min-h-screen flex-col overflow-x-clip bg-[#f5f8fe] bg-[radial-gradient(circle_at_0%_100%,#dce8fb_0,transparent_240px),linear-gradient(135deg,#eaf1fd_0,transparent_420px)] font-sans">
+    <div className="flex min-h-screen flex-col overflow-x-clip bg-[#fdfdfe] bg-[radial-gradient(150px_260px_at_0_230px,#c9defd,transparent),radial-gradient(170px_280px_at_100%_240px,#cfe2fe,transparent),linear-gradient(180deg,#e3edfd_135px,#f5f8fe_450px,#fdfdfe_780px)] bg-no-repeat font-sans">
       <TopBar />
       <SiteHeader />
       <div className="flex-1">

@@ -20,10 +20,10 @@ export default function HomePage() {
       </div>
       <ServiceStrip />
       <CategoryTiles />
-      <section className="mt-[21px]">
+      <section className="mt-[22px] xl:pl-[3px]">
         <SectionHeading title="Featured Products" linkTo="/shop?featured=true" linkLabel="View All Products" />
         {featured.error && <ErrorState message={featured.error} onRetry={featured.reload} />}
-        <div className="grid grid-cols-2 gap-[10px] md:grid-cols-3 lg:grid-cols-[212fr_211fr_212fr_211fr_200fr_173fr]">
+        <div className="grid grid-cols-2 gap-[10px] md:grid-cols-3 xl:grid-cols-[212fr_211fr_212fr_211fr_200fr_173fr]">
           {featured.loading && !featured.data && Array.from({ length: FEATURED_COUNT }, (_, index) => <ProductCardSkeleton key={index} />)}
           {(featured.data ?? []).map((product) => (
             <ProductCard key={product.id} product={product} />

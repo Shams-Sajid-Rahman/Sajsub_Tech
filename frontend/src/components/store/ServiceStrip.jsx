@@ -12,13 +12,13 @@ export default function ServiceStrip() {
   ];
 
   return (
-    <ul className="mt-[16px] grid grid-cols-2 gap-y-3 rounded-xl border border-[#e6ecf7] bg-white py-3 lg:grid-cols-4 lg:divide-x lg:divide-[#dfe5f0] lg:py-[13px]">
+    <ul className="mt-[16px] grid grid-cols-2 gap-y-3 rounded-xl border border-[#e6ecf7] bg-white py-3 lg:grid-cols-4 lg:divide-x xl:grid-cols-[302fr_333fr_316fr_319fr] lg:divide-[#dfe5f0] lg:py-[13px] xl:py-[14px]">
       {services.map(({ icon: Icon, title, text }) => (
-        <li key={title} className="flex items-center justify-start gap-2 px-3 lg:justify-center lg:gap-[20px] lg:px-0">
+        <li key={title} className="flex items-center justify-start gap-2 px-3 lg:justify-center lg:gap-[20px] lg:px-0 xl:justify-start xl:pl-[70px] xl:last:pl-[64px]">
           <Icon aria-hidden="true" strokeWidth={1.6} className="size-[28px] shrink-0 text-primary lg:size-[36px]" />
-          <span className="min-w-0">
-            <span className="block text-[12px] font-semibold text-navy lg:text-[13px]">{title}</span>
-            <span className="block text-[10px] text-[#5b6780] lg:mt-[4px] lg:text-[11px]">{text}</span>
+          <span className="min-w-0 xl:pt-[4px]">
+            <span className="block text-[12px] font-semibold text-navy lg:text-[13px] xl:text-[12.5px]">{title}</span>
+            <span className="block text-[10px] text-[#5b6780] lg:mt-[4px] lg:text-[11px] xl:mt-0 xl:text-[10.5px]">{text}</span>
           </span>
         </li>
       ))}

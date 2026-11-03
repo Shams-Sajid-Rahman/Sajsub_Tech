@@ -74,7 +74,15 @@ const request = async (method, path, body) => {
   return parse(response);
 };
 
-export const apiGet = (path) => request('GET', path);
+const getsInFlight = new Map();
+
+// Components asking for the same data at the same moment share one request.
+export const apiGet = (path) => {
+  if (!getsInFlight.has(path)) {
+    getsInFlight.set(path, request('GET', path).finally(() => getsInFlight.delete(path)));
+  }
+  return getsInFlight.get(path);
+};
 export const apiPost = (path, body) => request('POST', path, body);
 export const apiPatch = (path, body) => request('PATCH', path, body);
 export const apiPut = (path, body) => request('PUT', path, body);

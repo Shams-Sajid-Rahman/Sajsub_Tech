@@ -49,9 +49,9 @@ function NavDropdown({ label, links }) {
   const { open, toggle, close, containerRef } = useDropdown();
   return (
     <div ref={containerRef} className="relative">
-      <button type="button" onClick={toggle} aria-expanded={open} className="flex items-center gap-[6px] px-[12px] py-[3px] text-[12px] font-medium text-navy hover:text-primary">
+      <button type="button" onClick={toggle} aria-expanded={open} className="flex items-center gap-[4px] px-[12px] py-[3px] text-[12px] font-medium text-navy hover:text-primary xl:text-[11.5px]">
         {label}
-        <ChevronDown aria-hidden="true" className="size-[14px]" />
+        <ChevronDown aria-hidden="true" className="size-[13px]" />
       </button>
       {open && (
         <div className="absolute left-0 z-40 mt-1 max-h-96 w-56 overflow-y-auto rounded-xl border border-line bg-white py-1 shadow-lg">
@@ -113,7 +113,7 @@ function AccountMenu() {
 
 function IconLink({ to, label, count, icon: Icon }) {
   return (
-    <Link to={to} aria-label={`${label}${count ? `, ${count} items` : ''}`} className="flex flex-col items-center gap-[1px] text-[10px] font-medium text-navy hover:text-primary lg:w-[50px]">
+    <Link to={to} aria-label={`${label}${count ? `, ${count} items` : ''}`} className="flex flex-col items-center gap-[1px] text-[10px] font-medium text-navy hover:text-primary lg:w-[50px] lg:translate-y-[6px]">
       <span className="relative">
         <Icon aria-hidden="true" className="size-[22px]" />
         <span className="absolute -right-[8px] -top-[6px] flex size-[15px] items-center justify-center rounded-full bg-[#e8112d] text-[9px] font-bold text-white">
@@ -158,7 +158,7 @@ export default function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const categories = (data ?? []).map(({ slug, name }) => ({ to: `/category/${slug}`, label: name }));
   const navClass = ({ isActive }) =>
-    `rounded-full py-[3px] text-[12px] font-medium ${isActive ? 'bg-primary px-[15px] font-semibold text-white' : 'px-[10px] text-navy hover:text-primary'}`;
+    `rounded-full py-[3px] text-[12px] font-medium xl:text-[11.5px] ${isActive ? 'bg-primary px-[14px] font-semibold text-white' : 'px-[12px] text-navy hover:text-primary'}`;
 
   return (
     <header className="relative z-30 bg-white">
@@ -171,9 +171,9 @@ export default function SiteHeader() {
             <img src="/images/brand/logo.png" alt="Sajsub Tech" width="164" height="54" className="h-[40px] w-auto mix-blend-multiply lg:h-[54px]" />
           </Link>
 
-          <div className="hidden flex-1 flex-col items-center lg:flex lg:pl-[194px] lg:pr-[358px]">
+          <div className="hidden flex-1 flex-col items-center lg:flex lg:pl-[16px] lg:pr-[246px] xl:pl-[181px] xl:pr-[358px]">
             <SearchBar className="mt-[17px] w-full max-w-[556px]" />
-            <nav aria-label="Main" className="mt-[9px] flex items-center">
+            <nav aria-label="Main" className="mt-[10px] flex items-center">
               <NavLink to="/" end className={navClass}>Home</NavLink>
               <NavDropdown label="Shop" links={SHOP_LINKS} />
               <NavDropdown label="Categories" links={categories} />
@@ -183,8 +183,8 @@ export default function SiteHeader() {
             </nav>
           </div>
 
-          <div className="ml-auto flex items-center gap-4 lg:absolute lg:right-[calc((100%-1272px)/2)] lg:top-[20px] lg:-mr-[8px] lg:ml-0 lg:gap-[17px]">
-            <div><AccountMenu /></div>
+          <div className="ml-auto flex items-center gap-4 lg:absolute lg:right-[max(16px,calc((100%-1272px)/2))] lg:top-[20px] lg:-mr-[8px] lg:ml-0 lg:gap-[17px]">
+            <div className="lg:-translate-y-[2px]"><AccountMenu /></div>
             <IconLink to="/wishlist" label="Wishlist" count={wishlist.length} icon={Heart} />
             <IconLink to="/cart" label="Cart" count={cart?.itemCount ?? 0} icon={ShoppingCart} />
           </div>

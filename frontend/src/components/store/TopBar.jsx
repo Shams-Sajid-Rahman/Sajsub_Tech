@@ -45,7 +45,7 @@ export default function TopBar() {
   return (
     <div className="bg-[linear-gradient(90deg,#0a2456,#0a2c6b_50%,#011339)] text-white">
       <div className="relative mx-auto flex min-h-[41px] max-w-[1536px] flex-wrap items-center justify-center gap-x-6 gap-y-1 px-4 py-1 pr-10 lg:py-0">
-        <div className="flex items-center divide-x divide-white/40 text-[11px] font-semibold lg:text-[12px]">
+        <div className="flex items-center text-[11px] sm:divide-x sm:divide-white/40 font-semibold lg:text-[12px]">
           {announcements.map(({ id, title }, index) => {
             const Icon = ICONS[index % ICONS.length];
             return (
@@ -56,10 +56,10 @@ export default function TopBar() {
             );
           })}
         </div>
-        <div className="lg:absolute lg:right-[184px]">
+        <div className="xl:absolute xl:right-[184px]">
           {site.settings.promo_ends_at && <Countdown endsAt={site.settings.promo_ends_at} />}
         </div>
-        <button type="button" onClick={() => setClosed(true)} aria-label="Close announcement" className="absolute right-3 top-1/2 -translate-y-1/2 text-sky-300 hover:text-white lg:right-[122px]">
+        <button type="button" onClick={() => setClosed(true)} aria-label="Close announcement" className="absolute right-3 top-1/2 -translate-y-1/2 text-sky-300 hover:text-white xl:right-[122px]">
           <X aria-hidden="true" className="size-4" />
         </button>
       </div>
